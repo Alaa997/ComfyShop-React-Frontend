@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import CategorySidebar from "../components/category/CategorySidebar";
 import { getProducts } from "../APIs/ProductAPI";
-import  Slider  from "../components/header/Slider";
+import Slider from "../components/header/Slider";
 import ProductCard from "../components/product/ProductCard";
 import { Container } from "react-bootstrap";
+import TokenManager from "../APIs/TokenManager";
 
 const HomePage = () => {
+  // const claims = TokenManager.getClaims().sub;
+  // console.log(claims);
   const [products, setProducts] = useState([]);
 
   const filterProducts = async (categoryId) => {

@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { deleteCartItem, getCartItems } from "../../APIs/CartAPI";
+import { getCurrentUser, getSessionId } from "../../APIs/AuthAPI";
+import { placeOrder } from "../../APIs/ShoppingSessionAPI";
 
 const MyCart = () => {
   const [cartItems, setCartItems] = useState([]);
+  const shoppingSessionId = getSessionId();
   const deleteProductFromCart = (cartId) => {
     console.log(cartId);
     const response = deleteCartItem(cartId);
 
     console.log(response);
   };
-  useEffect(() => {
-    let claimsString = localStorage.getItem("claims");
-    var claims = JSON.parse(claimsString);
-    var shoppingSessionId = claims.shoppingSessionId;
-    // console.log(shoppingSessionId)
 
+  const checkout = async () => {
+    const currentUser = getCurrentUser();
+    const currentUserID = currentUser.id;
+    console.log(currentUser.id);
+    const res = await placeOrder(shoppingSessionId, currentUserID);
+
+    console.log(res);
+  };
+
+  useEffect(() => {
     const getMyCart = async () => {
       const myCart = await getCartItems(shoppingSessionId);
-      // console.log(myCart)
+      console.log(myCart[0].id);
       if (myCart) {
         setCartItems(myCart);
       }
@@ -109,7 +117,7 @@ const MyCart = () => {
               <button
                 type="submit"
                 className="btn bg-color custom-bg-text mb-3"
-                // onClick={checkout}
+                onClick={() => checkout()}
               >
                 Checkout
               </button>

@@ -1,14 +1,21 @@
-// import React, { useState } from "react";
+// import React, { useEffect, useState } from "react";
 // import { Client } from "@stomp/stompjs";
 // import { v4 as uuidv4 } from "uuid";
-// import ChatMessagesPlaceholder from "./components/ChatMessagesPlaceHolder";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 // import SendMessagePlaceholder from "./components/SendMessagePlaceholder";
 // import UsernamePlaceholder from "./components/UsernamePlaceholder";
 
-// function WebsocketAPI() {
+// function NotificationService() {
 //   const [stompClient, setStompClient] = useState();
 //   const [username, setUsername] = useState();
-//   const [messagesReceived, setMessagesReceived] = useState([]);
+//   let [messagesReceived, setMessagesReceived] = useState([]);
+
+//   useEffect(() => {
+//     if (username) {
+//       setupStompClient(username);
+//     }
+//   }, [username]);
 
 //   const setupStompClient = (username) => {
 //     // stomp client over websockets
@@ -20,10 +27,13 @@
 //     });
 
 //     stompClient.onConnect = () => {
-//       // subscribe to the backend "private" topic
-//       stompClient.subscribe(`/user/${username}/queue/inboxmessages`, (data) => {
+//       // if (username === "Alaa") {
+//       // subscribe to the backend public topic
+//       stompClient.subscribe("/topic/publicmessages", (data) => {
+//         console.log(data);
 //         onMessageReceived(data);
 //       });
+//       // }
 //     };
 
 //     // initiate client
@@ -34,41 +44,27 @@
 //   };
 
 //   // send the data using Stomp
-//   const sendMessage = (newMessage) => {
-//     if (!newMessage.text || !newMessage.to) {
-//       alert("Please enter a message and specify a recipient.");
-//       return;
-//     }
+//   const sendMessage = () => {
 //     const payload = {
 //       id: uuidv4(),
-//       from: username,
-//       to: newMessage.to,
-//       text: newMessage.text,
-//       timestamp: new Date().toISOString(),
+//       from: "Alaa",
+//       text: "New product is available!",
 //     };
-//     if (payload.to) {
-//       stompClient.publish({
-//         destination: `/user/${payload.to}/queue/inboxmessages`,
-//         body: JSON.stringify(payload),
-//       });
-//     } else {
-//       stompClient.publish({
-//         destination: `/user/${username}/queue/inboxmessages`,
-//         body: JSON.stringify(payload),
-//       });
-//     }
-//     onMessageReceived({ body: JSON.stringify(payload) }); // Add this line to display sender's own message
+//     stompClient.publish({
+//       destination: "/topic/publicmessages",
+//       body: JSON.stringify(payload),
+//     });
 //   };
 
 //   // display the received data
 //   const onMessageReceived = (data) => {
 //     const message = JSON.parse(data.body);
-//     setMessagesReceived((messagesReceived) => [...messagesReceived, message]);
+//     setMessagesReceived([message]);
 //   };
 
 //   const onUsernameInformed = (username) => {
 //     setUsername(username);
-//     setupStompClient(username);
+//     // setupStompClient(username);
 //   };
 
 //   return (
@@ -80,12 +76,15 @@
 //       <br></br>
 //       <SendMessagePlaceholder username={username} onMessageSend={sendMessage} />
 //       <br></br>
-//       <ChatMessagesPlaceholder
-//         username={username}
-//         messagesReceived={messagesReceived}
-//       />
+//       {messagesReceived
+//         .filter((message) => message.from !== username)
+//         .map((message) => {
+//           toast(message.text); // Display toast message
+//           return null;
+//         })}
+//       <ToastContainer />
 //     </div>
 //   );
 // }
 
-// export default WebsocketAPI;
+// export default NotificationService;

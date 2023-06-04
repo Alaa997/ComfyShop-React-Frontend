@@ -3,12 +3,12 @@ import TokenManager from "./TokenManager";
 
 const API_URL = "http://localhost:8081/user";
 
-export const register = async(user) =>{
+export const register = async (user) => {
   const response = await axios.post(API_URL + "/sign-up", user);
   console.log("Response:", response);
   // Process the response or return it if needed
   return response;
-}
+};
 
 export const login = (data) => {
   const headers = {
@@ -22,12 +22,13 @@ export const login = (data) => {
     .catch((error) => console.log(error));
 };
 
-export const getCurrentUser = () => {
+export const getCurrentUser = async () => {
   const claims = TokenManager.getClaims();
   if (claims?.sub) {
-    return claims.sub;
+    const response = await axios.get(`${API_URL}/${claims.sub}`);
+    console.log(response.data);
+    return response.data;
   }
-  return null;
 };
 
 export const getRole = () => {
@@ -36,4 +37,16 @@ export const getRole = () => {
     return claims.roles[0];
   }
   return null;
+};
+
+export const getSessionId = () => {
+  return JSON.parse(localStorage.getItem("claims")).shoppingSessionId;
+};
+
+export const getSessionI = () => {
+  const claims = JSON.parse(localStorage.getItem("claims"));
+  // Update the shoppingSessionId value here
+  claims.shoppingSessionId = "newSessionId";
+  localStorage.setItem("claims", JSON.stringify(claims));
+  return claims.shoppingSessionId;
 };

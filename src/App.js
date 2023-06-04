@@ -10,6 +10,7 @@ import MyCart from "./components/customer/MyCart";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import "bootstrap/dist/css/bootstrap.css";
+import Order from "./components/customer/Order";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/cart" element={<MyCart />} />
+          <Route path="/order" element={<Order />} />
           <Route path="/addcategory" element={<AddCategory />} />
           <Route path="/addcategory" element={<UpdateProduct />} />
           <Route path="/addproduct" element={<AddProduct />} />
