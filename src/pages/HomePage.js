@@ -7,20 +7,28 @@ import { Container } from "react-bootstrap";
 import TokenManager from "../APIs/TokenManager";
 
 const HomePage = () => {
-  // const claims = TokenManager.getClaims().sub;
-  // console.log(claims);
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const filterProducts = async (categoryId) => {
     const allProducts = await getProducts(categoryId);
     if (allProducts) {
       setProducts(allProducts);
+      setFilteredProducts(allProducts);
     }
   };
 
   useEffect(() => {
     filterProducts();
   }, []);
+
+  const handleSearch = (event) => {
+    const searchQuery = event.target.value.toLowerCase();
+    const filteredProducts = products.filter((product) =>
+      product.name.toLowerCase().includes(searchQuery)
+    );
+    setFilteredProducts(filteredProducts);
+  };
 
   return (
     <Container fluid>
@@ -47,12 +55,16 @@ const HomePage = () => {
               maxWidth: "75%",
             }}
           >
-            {/* <ProductList products={products} /> */}
+            <input
+              type="text"
+              onChange={handleSearch}
+              placeholder="Search products..."
+            />
             <div className="col-md-10">
               <div className="row row-cols-1 row-cols-md-4 g-4">
-                {products.map((product) => {
-                  return <ProductCard key={product.id} product={product} />;
-                })}
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
               </div>
             </div>
           </div>
