@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getProductById, update } from "../../APIs/ProductAPI";
 import { Toaster, toast } from "react-hot-toast";
 
 const UpdateProduct = () => {
+  const navigate = useNavigate();
   const { productId } = useParams();
   const [product, setProduct] = useState({});
   const [selectedCategory, setSelectedCategory] = useState({});
@@ -66,14 +67,20 @@ const UpdateProduct = () => {
       price: formData.price,
     };
 
-    try {
-      const res = await update(productId, updatedProduct);
-      console.log(res.status);
-      toast.success("Successfully updated!");
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong!");
-    }
+    update(productId, updatedProduct)
+      .then((res) => {
+        console.log(res.status);
+        toast.success("Successfully created!");
+
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Something went wrong!");
+      });
+      
   };
 
   return (
