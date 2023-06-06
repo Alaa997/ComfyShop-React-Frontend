@@ -3,9 +3,14 @@ import AuthHeader from "./AuthHeader";
 
 const productAPI = "http://localhost:8081/products";
 
+export const update = async (productId, product) => {
+  const res = await axios.put(`${productAPI}/${productId}`, product);
+  return res;
+};
+
 export const getProductById = async(productId)=> {
   try {
-    const response = await axios.get(`${productAPI}/product/${productId}`);
+    const response = await axios.get(`${productAPI}/${productId}`);
     return response.data;
   } catch (error) {
     console.log(error);

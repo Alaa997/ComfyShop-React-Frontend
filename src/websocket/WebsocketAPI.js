@@ -6,7 +6,7 @@
 // import UsernamePlaceholder from "./components/UsernamePlaceholder";
 
 // function WebsocketAPI() {
-//   const [stompClient, setStompClient] = useState();
+//   const [stompClient, setStompClient] = useState(null);
 //   const [username, setUsername] = useState();
 //   const [messagesReceived, setMessagesReceived] = useState([]);
 

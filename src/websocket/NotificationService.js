@@ -7,9 +7,11 @@
 // import UsernamePlaceholder from "./components/UsernamePlaceholder";
 
 // function NotificationService() {
-//   const [stompClient, setStompClient] = useState();
 //   const [username, setUsername] = useState();
 //   let [messagesReceived, setMessagesReceived] = useState([]);
+ 
+ 
+//   const [stompClient, setStompClient] = useState();
 
 //   useEffect(() => {
 //     if (username) {

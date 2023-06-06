@@ -13,9 +13,9 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   const updateProduct = (productId) => {
-    console.log(productId);
-    // navigate(`/products/${productId}`);
-    return <UpdateProduct />;
+    // console.log(productId);
+    navigate(`/products/${productId}`);
+    // return <UpdateProduct />;
   };
 
   const handleAddToCart = (selectedProduct) => {

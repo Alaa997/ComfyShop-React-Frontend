@@ -5,7 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import { getCategories } from "../../APIs/CategoryAPI";
 import { addProduct } from "../../APIs/ProductAPI";
+import { Client } from "@stomp/stompjs";
 
+const client = new Client({
+  brokerURL: "ws://localhost:8081/ws",
+  debug: function (message) {
+    console.log(message);
+  },
+});
 const AddProduct = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
@@ -17,18 +24,11 @@ const AddProduct = () => {
     description: "",
     price: "",
   });
+  const [websocketActive, setWebsocketActive] = useState(false); // Track WebSocket connection state
 
   const getAllCategories = async () => {
     const allCategories = await getCategories();
     allCategories && setCategories(allCategories);
-  };
-  const reset = (e) => {
-    e.preventDefault();
-    setProduct({
-      name: "",
-      description: "",
-      price: "",
-    });
   };
 
   const required = () => {
@@ -45,17 +45,12 @@ const AddProduct = () => {
     return errors;
   };
 
-  useEffect(() => {
-    getAllCategories();
-  }, []);
-
   const handleInput = (e) => {
     e.preventDefault();
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
   const handleSelectedCategory = (e) => {
-    console.log(e.target.value);
     const { id, name } = JSON.parse(e.target.value);
     setSelectedCategory({ id, name });
   };
@@ -74,6 +69,15 @@ const AddProduct = () => {
           console.log(res.status);
           toast.success("Successfully created!");
 
+          if (websocketActive) {
+            client.publish({
+              destination: "/topic/notifications",
+              body: JSON.stringify({
+                text: "A new product has been added!",
+              }),
+            });
+          }
+
           setTimeout(() => {
             navigate("/");
           }, 1500);
@@ -82,9 +86,47 @@ const AddProduct = () => {
           console.log(error);
           toast.error("Something went wrong!");
         });
-      reset();
     }
   };
+
+  useEffect(() => {
+    getAllCategories();
+    return () => {
+      // Cleanup code if needed
+    };
+  }, []);
+
+  useEffect(() => {
+    const client = new Client({
+      brokerURL: "ws://localhost:8081/ws",
+      debug: function (message) {
+        console.log(message);
+      },
+    });
+
+    client.onConnect = (frame) => {
+      // WebSocket connection is successful
+      console.log("Connected to WebSocket");
+    };
+
+    client.onDisconnect = (frame) => {
+      // WebSocket connection is disconnected
+      console.log("Disconnected from WebSocket");
+    };
+
+    client.onWebSocketError = (event) => {
+      // WebSocket error occurred
+      console.log("WebSocket error:", event);
+    };
+
+    if (websocketActive) {
+      client.activate();
+    }
+
+    return () => {
+      client.deactivate();
+    };
+  }, [websocketActive]);
 
   return (
     <div>
