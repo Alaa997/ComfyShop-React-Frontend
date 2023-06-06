@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CategorySidebar from "../components/category/CategorySidebar";
+
 import { getProducts } from "../APIs/ProductAPI";
 import Slider from "../components/header/Slider";
 import ProductCard from "../components/product/ProductCard";
@@ -47,7 +47,7 @@ const HomePage = () => {
               maxWidth: "25%",
             }}
           >
-            <CategorySidebar filterProducts={filterProducts} />
+            {/* <CategorySidebar filterProducts={filterProducts} /> */}
           </div>
           <div
             style={{

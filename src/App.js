@@ -11,6 +11,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import "bootstrap/dist/css/bootstrap.css";
 import Order from "./components/customer/Order";
+import ChartComponent from "./components/statistics/Chart";
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/cart" element={<MyCart />} />
           <Route path="/order" element={<Order />} />
+          <Route path="/statistics" element={<ChartComponent />} />
           <Route path="/addcategory" element={<AddCategory />} />
           <Route path="/addcategory" element={<UpdateProduct />} />
           <Route path="/addproduct" element={<AddProduct />} />
