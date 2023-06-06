@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById, update }  from "../../APIs/ProductAPI";
-import { getCategories } from "../../APIs/CategoryAPI";
+import { getProductById, update } from "../../APIs/ProductAPI";
+import { Toaster, toast } from "react-hot-toast";
+
 const UpdateProduct = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState({});
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState({});
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -22,7 +22,9 @@ const UpdateProduct = () => {
         setFormData({
           name: selectedProduct.name,
           description: selectedProduct.description,
-          category: selectedProduct.category ? selectedProduct.category.id : "",
+          category: selectedProduct.category
+            ? JSON.stringify(selectedProduct.category)
+            : "",
           price: selectedProduct.price,
         });
       } catch (error) {
@@ -31,17 +33,17 @@ const UpdateProduct = () => {
     };
 
     fetchData();
-    getCategories().then((allCategories) => {
-      setCategories(allCategories || []);
-    });
   }, [productId]);
 
   const handleSelectedCategory = (e) => {
     const categoryId = e.target.value;
-    setSelectedCategory(categoryId);
+    const selectedCategory = product.categories.find(
+      (category) => category.id === categoryId
+    );
+    setSelectedCategory(selectedCategory);
     setFormData((prevFormData) => ({
       ...prevFormData,
-      category: categoryId,
+      category: JSON.stringify(selectedCategory),
     }));
   };
 
@@ -60,15 +62,17 @@ const UpdateProduct = () => {
       id: product.id,
       name: formData.name,
       description: formData.description,
-      category: selectedCategory,
+      category: JSON.parse(formData.category),
       price: formData.price,
     };
 
     try {
-      const res = await update()
-      console.log(res); // Handle the response as needed
+      const res = await update(productId, updatedProduct);
+      console.log(res.status);
+      toast.success("Successfully updated!");
     } catch (error) {
-      console.log(error); // Handle the error
+      console.log(error);
+      toast.error("Something went wrong!");
     }
   };
 
@@ -123,11 +127,15 @@ const UpdateProduct = () => {
                   value={formData.category}
                 >
                   <option value="">Select Category</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
+                  {product.categories &&
+                    product.categories.map((category) => (
+                      <option
+                        key={category.id}
+                        value={JSON.stringify(category)}
+                      >
+                        {category.name}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div className="mb-3">
@@ -144,12 +152,13 @@ const UpdateProduct = () => {
                 />
               </div>
               <button type="submit" className="btn btn-primary w-100">
-                Update product
+                Update Product
               </button>
             </form>
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

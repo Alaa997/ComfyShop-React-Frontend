@@ -4,6 +4,7 @@ import AuthHeader from "./AuthHeader";
 const productAPI = "http://localhost:8081/products";
 
 export const update = async (productId, product) => {
+  console.log(product.category);
   const res = await axios.put(`${productAPI}/${productId}`, product);
   return res;
 };
