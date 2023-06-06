@@ -7,7 +7,6 @@ const UpdateProduct = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
   const [product, setProduct] = useState({});
-  const [selectedCategory, setSelectedCategory] = useState({});
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -15,38 +14,27 @@ const UpdateProduct = () => {
     price: "",
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const selectedProduct = await getProductById(productId);
-        setProduct(selectedProduct);
-        setFormData({
-          name: selectedProduct.name,
-          description: selectedProduct.description,
-          category: selectedProduct.category
-            ? JSON.stringify(selectedProduct.category)
-            : "",
-          price: selectedProduct.price,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, [productId]);
-
-  const handleSelectedCategory = (e) => {
-    const categoryId = e.target.value;
-    const selectedCategory = product.categories.find(
-      (category) => category.id === categoryId
-    );
-    setSelectedCategory(selectedCategory);
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      category: JSON.stringify(selectedCategory),
-    }));
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const selectedProduct = await getProductById(productId);
+      setProduct(selectedProduct);
+      setFormData({
+        name: selectedProduct.name,
+        description: selectedProduct.description,
+        category: selectedProduct.category
+          ? JSON.stringify(selectedProduct.category)
+          : "",
+        price: selectedProduct.price,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  fetchData();
+}, [productId]);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -80,7 +68,6 @@ const UpdateProduct = () => {
         console.log(error);
         toast.error("Something went wrong!");
       });
-      
   };
 
   return (
@@ -126,24 +113,7 @@ const UpdateProduct = () => {
                 <label className="form-label">
                   <b>Category</b>
                 </label>
-
-                <select
-                  name="category"
-                  onChange={handleSelectedCategory}
-                  className="form-control"
-                  value={formData.category}
-                >
-                  <option value="">Select Category</option>
-                  {product.categories &&
-                    product.categories.map((category) => (
-                      <option
-                        key={category.id}
-                        value={JSON.stringify(category)}
-                      >
-                        {category.name}
-                      </option>
-                    ))}
-                </select>
+                <p>{product.category && product.category.name}</p>
               </div>
               <div className="mb-3">
                 <label htmlFor="price" className="form-label">
@@ -159,13 +129,13 @@ const UpdateProduct = () => {
                 />
               </div>
               <button type="submit" className="btn btn-primary w-100">
-                Update Product
+                Update product
               </button>
+              <Toaster />
             </form>
           </div>
         </div>
       </div>
-      <Toaster />
     </div>
   );
 };
