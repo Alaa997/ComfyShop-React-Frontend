@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-
 import { getProducts } from "../APIs/ProductAPI";
 import Slider from "../components/header/Slider";
 import ProductCard from "../components/product/ProductCard";
 import { Container } from "react-bootstrap";
-import TokenManager from "../APIs/TokenManager";
+import CategorySidebar from "../components/category/CategorySidebar";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -47,7 +46,7 @@ const HomePage = () => {
               maxWidth: "25%",
             }}
           >
-            {/* <CategorySidebar filterProducts={filterProducts} /> */}
+            <CategorySidebar filterProducts={filterProducts} />
           </div>
           <div
             style={{
