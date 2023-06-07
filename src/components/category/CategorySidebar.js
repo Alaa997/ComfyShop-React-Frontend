@@ -31,10 +31,8 @@ const CategorySidebar = (props) => {
 
   const handleDeleteCategory = (categoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
-      // Perform delete operation here
       deleteCategory(categoryId)
         .then(() => {
-          // Update categories list after successful deletion
           setCategories(
             categories.filter((category) => category.id !== categoryId)
           );

@@ -1,21 +1,22 @@
 import React from "react";
-import { Card, Col } from "react-bootstrap";
+import { Button, Card, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import pic from "../../Images/pic.png";
 import favoff from "../../Images/fav-off.png";
-import UpdateProduct from "./UpdateProduct";
 import TokenManager from "../../APIs/TokenManager";
 import { addTocart } from "../../APIs/CartAPI";
 import { getRole } from "../../APIs/AuthAPI";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { deleteProduct } from "../../APIs/ProductAPI";
+import { toast } from "react-hot-toast";
 
 const ProductCard = ({ product }) => {
-  const isAdmin = getRole() !== "ADMIN";
+  const isAdmin = getRole() === "ADMIN";
   const navigate = useNavigate();
 
   const updateProduct = (productId) => {
-    // console.log(productId);
     navigate(`/products/${productId}`);
-    // return <UpdateProduct />;
   };
 
   const handleAddToCart = (selectedProduct) => {
@@ -27,6 +28,20 @@ const ProductCard = ({ product }) => {
     console.log(cartData);
     addTocart(cartData);
   };
+
+  const handleDeleteProduct  = (productId) => {
+if (window.confirm("Are you sure you want to delete this product?")) {
+  deleteProduct(productId)
+    .then(() => {
+      navigate(`/home`);
+      toast.success("Successfully removed!");
+    })
+    .catch((error) => {
+      console.log(error);
+      toast.error("Something went wrong!");
+    });
+}
+  }
 
   return (
     <Col xs="6" sm="6" md="4" lg="3" className="d-flex">
@@ -65,7 +80,7 @@ const ProductCard = ({ product }) => {
           </Card.Title>
           <Card.Text>
             <span className="d-flex justify-content-between">
-              {isAdmin ? (
+              {!isAdmin ? (
                 <Link
                   to={`/cart?id=${product}`}
                   className="btn btn-success"
@@ -74,13 +89,23 @@ const ProductCard = ({ product }) => {
                   Add to Cart
                 </Link>
               ) : (
-                <Link
-                  to={`/update-product/${product.id}`}
-                  className="btn btn-success"
-                  onClick={() => updateProduct(product.id)}
-                >
-                  Update Product
-                </Link>
+                <>
+                  <Link
+                    to={`/update-product/${product.id}`}
+                    className="btn btn-success"
+                    onClick={() => updateProduct(product.id)}
+                  >
+                    Update Product
+                  </Link>
+                  <Button
+                    variant="link"
+                    className="delete-icon"
+                    onClick={() => handleDeleteProduct(product.id)}
+                    style={{ marginLeft: "auto", color: "red" }}
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </Button>
+                </>
               )}
               <span className="d-flex">
                 <span className="card-price">{product.price} $</span>
