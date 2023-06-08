@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { deleteProduct } from "../../APIs/ProductAPI";
 import { toast } from "react-hot-toast";
+import { getSessionId } from "../../APIs/ShoppingSessionAPI";
 
 const ProductCard = ({ product }) => {
   const isAdmin = getRole() === "ADMIN";
@@ -19,29 +20,29 @@ const ProductCard = ({ product }) => {
     navigate(`/products/${productId}`);
   };
 
-  const handleAddToCart = (selectedProduct) => {
+  const handleAddToCart = async (selectedProduct) => {
+    const userId = TokenManager.getClaims().userId;
     const cartData = {
-      sessionId: TokenManager.getClaims().shoppingSessionId,
+      sessionId: await getSessionId(userId),
       product: selectedProduct,
       quantity: 1,
     };
-    console.log(cartData);
-    addTocart(cartData);
+    const res = await addTocart(cartData);
   };
 
-  const handleDeleteProduct  = (productId) => {
-if (window.confirm("Are you sure you want to delete this product?")) {
-  deleteProduct(productId)
-    .then(() => {
-      navigate(`/home`);
-      toast.success("Successfully removed!");
-    })
-    .catch((error) => {
-      console.log(error);
-      toast.error("Something went wrong!");
-    });
-}
-  }
+  const handleDeleteProduct = (productId) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      deleteProduct(productId)
+        .then(() => {
+          navigate(`/home`);
+          toast.success("Successfully removed!");
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error("Something went wrong!");
+        });
+    }
+  };
 
   return (
     <Col xs="6" sm="6" md="4" lg="3" className="d-flex">

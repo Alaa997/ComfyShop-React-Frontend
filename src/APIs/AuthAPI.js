@@ -26,7 +26,7 @@ export const getCurrentUser = async () => {
   const claims = TokenManager.getClaims();
   if (claims?.sub) {
     const response = await axios.get(`${API_URL}/${claims.sub}`);
-    console.log(response.data);
+    localStorage.setItem("userId", JSON.stringify(response.data.id));
     return response.data;
   }
 };
@@ -37,10 +37,6 @@ export const getRole = () => {
     return claims.roles[0];
   }
   return null;
-};
-
-export const getSessionId = () => {
-  return JSON.parse(localStorage.getItem("claims")).shoppingSessionId;
 };
 
 export const getSessionI = () => {

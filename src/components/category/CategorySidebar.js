@@ -9,8 +9,6 @@ import { Button, Col, Container, Nav, Row } from "react-bootstrap";
 
 const CategorySidebar = (props) => {
   const isAdmin = getRole() === "ADMIN";
-  console.log(isAdmin);
-
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {

@@ -1,31 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { deleteCartItem, getCartItems } from "../../APIs/CartAPI";
-import { getCurrentUser, getSessionId } from "../../APIs/AuthAPI";
-import { placeOrder } from "../../APIs/ShoppingSessionAPI";
+import { getSessionId, placeOrder } from "../../APIs/ShoppingSessionAPI";
+import { Toaster, toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import TokenManager from "../../APIs/TokenManager";
 
 const MyCart = () => {
+  const userId = TokenManager.getClaims().userId;
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
-  const shoppingSessionId = getSessionId();
-  const deleteProductFromCart = (cartId) => {
-    console.log(cartId);
-    const response = deleteCartItem(cartId);
+
+  const deleteProductFromCart = async(cartId) => {
+     console.log(cartId);
+    const response = await deleteCartItem(cartId);
 
     console.log(response);
   };
 
   const checkout = async () => {
-    const currentUser = getCurrentUser();
-    const currentUserID = currentUser.id;
-    console.log(currentUser.id);
-    const res = await placeOrder(shoppingSessionId, currentUserID);
+    try {
+      const shoppingSessionId = await getSessionId(userId);
+      console.log(shoppingSessionId);
 
-    console.log(res);
+      placeOrder(shoppingSessionId, userId)
+        .then((res) => {
+          console.log(res);
+          toast.success("Successfully created!");
+          setTimeout(() => {
+            navigate("/order");
+          }, 1500);
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error("Something went wrong!");
+        });
+    } catch (error) {
+      console.log(error);
+      // Handle error if getCurrentUser() or placeOrder() throws an exception
+    }
   };
 
   useEffect(() => {
     const getMyCart = async () => {
+      const shoppingSessionId = await getSessionId(userId);
       const myCart = await getCartItems(shoppingSessionId);
-      console.log(myCart[0].id);
       if (myCart) {
         setCartItems(myCart);
       }
@@ -79,7 +97,7 @@ const MyCart = () => {
                         /> */}
                       </td>
                       <td>
-                        <b>{cartData.product.name}</b>
+                        <b>{cartData.product.name}</b>j
                       </td>
                       <td>
                         <b>{cartData.product.description}</b>
@@ -121,6 +139,7 @@ const MyCart = () => {
               >
                 Checkout
               </button>
+              <Toaster />
             </div>
           </div>
         </div>
