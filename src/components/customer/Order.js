@@ -1,45 +1,24 @@
 import React, { useEffect, useState } from "react";
-import pic from "../../Images/pic.png";
+import mobile1 from "../../Images/mobile1.png";
 import { getOrders } from "../../APIs/ShoppingSessionAPI";
+import TokenManager from "../../APIs/TokenManager";
 import { getCurrentUser } from "../../APIs/AuthAPI";
 
 const Order = () => {
   const [myOrderData, setMyOrderData] = useState([]);
+  const [username, setUserName] = useState("");
 
   const getMyOrders = async () => {
-    const currentUser = await getCurrentUser();
-    console.log(currentUser.id);
-    const myOrders = await getOrders(currentUser.id);
-    console.log(myOrders);
-    if (myOrders) {
-      const ordersWithTotalPrice = myOrders.map((order) => ({
-        ...order,
-        totalPrice: calculateTotalOrderPrice(order.cartItems),
-      }));
-      setMyOrderData(ordersWithTotalPrice);
-    }
+    const user = await getCurrentUser();
+    setUserName(user.firstName);
+    const userId = TokenManager.getClaims().userId;
+    const myOrders = await getOrders(userId);
+    setMyOrderData(myOrders);
   };
 
   useEffect(() => {
     getMyOrders();
   }, []);
-
-  const calculateTotalOrderPrice = (cartItems) => {
-    let totalPrice = 0;
-    for (const cartItem of cartItems) {
-      const itemPrice = cartItem.product.price * cartItem.quantity;
-      totalPrice += itemPrice;
-    }
-    return totalPrice;
-  };
-
-  const calculateTotalQuantity = (cartItems) => {
-    let totalQuantity = 0;
-    for (const cartItem of cartItems) {
-      totalQuantity += cartItem.quantity;
-    }
-    return totalQuantity;
-  };
 
   return (
     <>
@@ -51,8 +30,8 @@ const Order = () => {
                 <div className="card" style={{ borderRadius: "10px" }}>
                   <div className="card-header px-4 py-5">
                     <h5 className="text-muted mb-0">
-                      Review My Orders,{" "}
-                      <span style={{ color: "#512DA8" }}>Anna</span>!
+                      My Orders,{" "}
+                      <span style={{ color: "#512DA8" }}>{username}</span>!
                     </h5>
                   </div>
                   <div className="card-body p-4">
@@ -70,7 +49,7 @@ const Order = () => {
                           <div className="row">
                             <div className="col-md-2">
                               <img
-                                src="~/img/iShop.png"
+                                src={mobile1}
                                 className="img-fluid"
                                 alt="Phone"
                               />
@@ -153,7 +132,7 @@ const Order = () => {
                       </p>
                       <p className="text-muted mb-0">
                         <span className="fw-bold me-4">Total</span> $
-                        {order.totalPrice}
+                        {order.total}
                       </p>
                     </div>
 
