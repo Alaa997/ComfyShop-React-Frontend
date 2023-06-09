@@ -42,7 +42,7 @@ const ChartComponent = () => {
   };
 
   const options = {
-    title: "My Daily Activities",
+    title: "The most sold products",
     is3D: true,
   };
 
@@ -53,21 +53,21 @@ const ChartComponent = () => {
 
   return (
     <div className="chart-container">
-      <h1 className="chart-heading">Chart Component</h1>
+      <h1 className="chart-heading text-danger">Chart Component</h1>
       {/* {loading ? ( */}
-        <p>Loading categories...</p>
+      <p>Loading categories...</p>
       {/* // ) : ( */}
-        <select
-          className="category-select"
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-        >
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
+      <select
+        className="category-select"
+        value={selectedCategory}
+        onChange={handleCategoryChange}
+      >
+        {categories.map((category) => (
+          <option key={category.id} value={category.id}>
+            {category.name}
+          </option>
+        ))}
+      </select>
       {/* // )} */}
       {!loading && (
         <Chart
