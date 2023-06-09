@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../Images/logo.png";
 import TokenManager from "../../APIs/TokenManager";
 import NormalHeader from "./NormalHeader";
@@ -7,9 +7,14 @@ import UserHeader from "./UserHeader";
 import cart from "../../Images/cart.png";
 import { Container, FormControl, Nav, Navbar } from "react-bootstrap";
 
-const Header = () => {
+const Header = (props) => {
   const [claims, setClaims] = useState(TokenManager.getClaims());
+    const [adminMsg, setAdminmsg] = useState([]);
 
+    console.log("adminMsg", adminMsg[0]?.text);
+  useEffect(() => {
+    setAdminmsg(props.messagesReceived);
+  }, [props.messagesReceived]);
   const handleLogout = () => {
     TokenManager.clear();
     setClaims(null);

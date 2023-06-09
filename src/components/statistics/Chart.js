@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
 import { getStatistics } from "../../APIs/Statistics";
 import { getCategories } from "../../APIs/CategoryAPI";
-import "./ChartComponent.css";
+import "../../components/statistics/ChartComponent.css";
 
 const ChartComponent = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -42,7 +42,7 @@ const ChartComponent = () => {
   };
 
   const options = {
-    title: "The most sold products",
+    title: "The Most Sold Products",
     is3D: true,
   };
 
@@ -73,6 +73,7 @@ const ChartComponent = () => {
         <Chart
           chartType="PieChart"
           data={[["Product Name", "Count"], ...data]}
+          // data={data}
           options={options}
           width={"100%"}
           height={"400px"}

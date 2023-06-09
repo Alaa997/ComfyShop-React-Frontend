@@ -13,7 +13,7 @@ const client = new Client({
     console.log(message);
   },
 });
-const AddProduct = () => {
+const AddProduct = (props) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
@@ -56,6 +56,9 @@ const AddProduct = () => {
   };
 
   const saveProduct = async (event) => {
+    //
+    props.sendMessage({ text: "test notification"});
+    
     event.preventDefault();
 
     const errors = required();
