@@ -57,8 +57,10 @@ useEffect(() => {
 
     update(productId, updatedProduct)
       .then((res) => {
-        console.log(res.status);
-        toast.success("Successfully created!");
+        if (res.status === 204) {
+           console.log(res.status);
+          toast.success("Product updated successfully!");
+        }
 
         setTimeout(() => {
           navigate("/");

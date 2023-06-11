@@ -30,7 +30,7 @@ const Login = (props) => {
     const errors = Object.values(required());
     if (errors.length === 0) {
       login(loginRequest);
-      navigate("/");
+      navigate("/home/all/product/categories");
       // window.location.reload(true);
     }
   };

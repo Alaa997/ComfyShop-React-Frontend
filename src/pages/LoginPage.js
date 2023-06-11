@@ -15,18 +15,8 @@ const LoginPage = () => {
     login(loginRequest)
       .catch(() => alert("Login failed!"))
       .then((claims) => setClaims(claims))
-      // .then(getUserDetails)
       .catch((error) => console.error(error));
   };
-
-  // const getUserDetails = () => {
-  //   const claims = TokenManager.getClaims();
-  //   if (claims?.roles?.includes("CUSTOMER") && claims?.userId) {
-  //     UserAPI.getUser(claims.userId)
-  //       .then((user) => setUserDetails(user))
-  //       .catch((error) => console.error(error));
-  //   }
-  // };
 
   const handleLogout = () => {
     TokenManager.clear();

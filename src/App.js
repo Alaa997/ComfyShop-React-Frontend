@@ -86,6 +86,7 @@ function App() {
     setupStompClient(TokenManager.getClaims()?.sub);
   }, []);
   console.log(stompClient);
+  
   return (
     <div className="font">
       <Header
