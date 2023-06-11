@@ -50,7 +50,7 @@ const MyCart = () => {
       }
     };
     getMyCart();
-  }, []);
+  }, [cartItems]);
 
   return (
     <div className="mt-3">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Nav, ToastContainer } from "react-bootstrap";
+import { Nav } from "react-bootstrap";
 import cart from "../../Images/cart.png";
 import { Toaster, toast } from "react-hot-toast";
 

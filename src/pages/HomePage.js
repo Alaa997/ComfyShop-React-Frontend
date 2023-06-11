@@ -54,7 +54,7 @@ const HomePage = (props) => {
 
   useEffect(() => {
     filterProducts();
-  }, [categories]); // Update products when categories change
+  }, [categories, products]); // Update products when categories change
 
   return (
     <Container fluid>

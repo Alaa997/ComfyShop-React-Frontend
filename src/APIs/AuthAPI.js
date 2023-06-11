@@ -1,5 +1,6 @@
 import axios from "axios";
 import TokenManager from "./TokenManager";
+import AuthHeader from "./AuthHeader";
 
 const API_URL = "http://localhost:8081/user";
 
@@ -25,7 +26,9 @@ export const login = (data) => {
 export const getCurrentUser = async () => {
   const claims = TokenManager.getClaims();
   if (claims?.sub) {
-    const response = await axios.get(`${API_URL}/${claims.sub}`);
+    const response = await axios.get(`${API_URL}/${claims.sub}`, {
+      headers: AuthHeader(),
+    });
     localStorage.setItem("userId", JSON.stringify(response.data.id));
     return response.data;
   }
