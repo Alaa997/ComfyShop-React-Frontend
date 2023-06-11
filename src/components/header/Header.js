@@ -42,6 +42,7 @@ const Header = (props) => {
               placeholder="Search..."
               className="me-2 w-75"
               aria-label="Search"
+              onChange={() => props.handleSearchReslut()}
             />
 
             <Nav className="mx-auto">

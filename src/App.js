@@ -19,11 +19,12 @@ import TokenManager from "./APIs/TokenManager";
 
 function App() {
   const [stompClient, setStompClient] = useState();
-  const [searchResult, setSearchResult] = useState();
+  const [searchResult, setSearchResult] = useState([]);
   const [messagesReceived, setMessagesReceived] = useState([]);
 
-  const handleSearchReslut = (input) => {
-    setSearchResult(input);
+  const handleSearchReslut = (e) => {
+    console.log(e.target.value)
+    setSearchResult(e.target.value);
   };
 
   const setupStompClient = (username) => {
@@ -82,7 +83,7 @@ function App() {
   };
 
   useEffect(() => {
-    setupStompClient(TokenManager.getClaims().sub);
+    setupStompClient(TokenManager.getClaims()?.sub);
   }, []);
   console.log(stompClient);
   return (

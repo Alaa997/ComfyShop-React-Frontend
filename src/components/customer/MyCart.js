@@ -4,6 +4,7 @@ import { getSessionId, placeOrder } from "../../APIs/ShoppingSessionAPI";
 import { Toaster, toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import TokenManager from "../../APIs/TokenManager";
+import mobile1 from "../../Images/mobile1.png";
 
 const MyCart = () => {
   const userId = TokenManager.getClaims().userId;

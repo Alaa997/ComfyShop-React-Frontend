@@ -1,45 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-hot-toast";
-import { deleteCategory, getCategories } from "../../APIs/CategoryAPI";
 import { getRole } from "../../APIs/AuthAPI";
 import { Button, Col, Container, Nav, Row } from "react-bootstrap";
 
 const CategorySidebar = (props) => {
   const isAdmin = getRole() === "ADMIN";
-  const [categories, setCategories] = useState([]);
-
-  useEffect(() => {
-    async function getAllCategories() {
-      const allCategories = await getCategories();
-      setCategories(allCategories);
-    }
-    getAllCategories();
-  }, []);
 
   const handleCategorySelect = (categoryId) => {
     if (categoryId) {
       props.filterProducts(categoryId);
     } else {
       props.filterProducts(null);
-    }
-  };
-
-  const handleDeleteCategory = (categoryId) => {
-    if (window.confirm("Are you sure you want to delete this category?")) {
-      deleteCategory(categoryId)
-        .then(() => {
-          setCategories(
-            categories.filter((category) => category.id !== categoryId)
-          );
-          toast.success("Successfully removed!");
-        })
-        .catch((error) => {
-          console.log(error);
-          toast.error("Something went wrong!");
-        });
     }
   };
 
@@ -73,7 +46,7 @@ const CategorySidebar = (props) => {
               All products
             </Nav.Link>
           </Nav.Item>
-          {categories.map((category) => (
+          {props.categories.map((category) => (
             <Nav.Item
               className="sidebar-menu-item"
               key={category.id}
@@ -89,7 +62,7 @@ const CategorySidebar = (props) => {
                   <Button
                     variant="link"
                     className="delete-icon"
-                    onClick={() => handleDeleteCategory(category.id)}
+                    onClick={() => props.handleDeleteCategory(category.id)}
                     style={{ marginLeft: "auto", color: "#fff" }}
                   >
                     <FontAwesomeIcon icon={faTrash} />
