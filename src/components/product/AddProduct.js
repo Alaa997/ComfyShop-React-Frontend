@@ -5,14 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import { getCategories } from "../../APIs/CategoryAPI";
 import { addProduct } from "../../APIs/ProductAPI";
-import { Client } from "@stomp/stompjs";
 
-const client = new Client({
-  brokerURL: "ws://localhost:8081/ws",
-  debug: function (message) {
-    console.log(message);
-  },
-});
 const AddProduct = (props) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
@@ -24,7 +17,6 @@ const AddProduct = (props) => {
     description: "",
     price: "",
   });
-  const [websocketActive, setWebsocketActive] = useState(false); // Track WebSocket connection state
 
   const getAllCategories = async () => {
     const allCategories = await getCategories();
@@ -56,9 +48,6 @@ const AddProduct = (props) => {
   };
 
   const saveProduct = async (event) => {
-    //
-    props.sendMessage({ text: "test notification" });
-
     event.preventDefault();
 
     const errors = required();
@@ -71,18 +60,10 @@ const AddProduct = (props) => {
         .then((res) => {
           console.log(res.status);
           if (res.status === 201) {
-            toast.error("Successfully created!");
+            toast.success("Successfully created!");
+            props.sendMessage({ text: "New Product is added!" });
           } else if (res.status === 400) {
-            toast.error("This product already exists.");
-          }
-
-          if (websocketActive) {
-            client.publish({
-              destination: "/topic/notifications",
-              body: JSON.stringify({
-                text: "A new product has been added!",
-              }),
-            });
+            toast.success("This product already exists.");
           }
 
           setTimeout(() => {
@@ -103,37 +84,6 @@ const AddProduct = (props) => {
     };
   }, []);
 
-  useEffect(() => {
-    const client = new Client({
-      brokerURL: "ws://localhost:8081/ws",
-      debug: function (message) {
-        console.log(message);
-      },
-    });
-
-    client.onConnect = (frame) => {
-      // WebSocket connection is successful
-      console.log("Connected to WebSocket");
-    };
-
-    client.onDisconnect = (frame) => {
-      // WebSocket connection is disconnected
-      console.log("Disconnected from WebSocket");
-    };
-
-    client.onWebSocketError = (event) => {
-      // WebSocket error occurred
-      console.log("WebSocket error:", event);
-    };
-
-    if (websocketActive) {
-      client.activate();
-    }
-
-    return () => {
-      client.deactivate();
-    };
-  }, [websocketActive]);
 
   return (
     <div>

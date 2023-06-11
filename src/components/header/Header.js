@@ -6,15 +6,18 @@ import AdminHeader from "./AdminHeader";
 import UserHeader from "./UserHeader";
 import cart from "../../Images/cart.png";
 import { Container, FormControl, Nav, Navbar } from "react-bootstrap";
+import { Toaster, toast } from "react-hot-toast";
 
 const Header = (props) => {
   const [claims, setClaims] = useState(TokenManager.getClaims());
-    const [adminMsg, setAdminmsg] = useState([]);
 
-    console.log("adminMsg", adminMsg[0]?.text);
-  useEffect(() => {
-    setAdminmsg(props.messagesReceived);
-  }, [props.messagesReceived]);
+
+    // toast.success(adminMsg[0]?.text);
+
+  // useEffect(() => {
+  //   setAdminmsg(props.messagesReceived);
+  // }, [props.messagesReceived]);
+
   const handleLogout = () => {
     TokenManager.clear();
     setClaims(null);
@@ -51,7 +54,7 @@ const Header = (props) => {
                   {claims.roles.includes("ADMIN") ? (
                     <AdminHeader />
                   ) : (
-                    <UserHeader />
+                    <UserHeader {...props} />
                   )}
                   <Nav.Link
                     onClick={handleLogout}
@@ -67,6 +70,7 @@ const Header = (props) => {
               )}
             </Nav>
           </Navbar.Collapse>
+          {/* <Toaster /> */}
         </Container>
       </Navbar>
     </>
