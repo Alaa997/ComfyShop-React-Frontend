@@ -16,15 +16,24 @@ import { Client } from "@stomp/stompjs";
 import { v4 as uuidv4 } from "uuid";
 import { useEffect, useState } from "react";
 import TokenManager from "./APIs/TokenManager";
+import { searchProductsByName } from "./APIs/ProductAPI";
 
 function App() {
   const [stompClient, setStompClient] = useState();
   const [messagesReceived, setMessagesReceived] = useState([]);
-  const [searchResult, setSearchResult] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
 
-  const handleSearchReslut = (event) => {
-    console.log(event.target.value.toLowerCase());
-    setSearchResult(event.target.value.toLowerCase());
+  const handleSearchResult = async (event) => {
+    // console.log(event.target.value.toLowerCase());
+    // setSearchResults(event.target.value.toLowerCase());
+  
+    const searchQuery = event.target.value.toLowerCase();
+    try {
+      const response = await searchProductsByName(searchQuery);
+      setSearchResults(response);
+    } catch (error) {
+      console.error("Error searching products:", error);
+    }
   };
 
   const setupStompClient = (username) => {
@@ -86,27 +95,30 @@ function App() {
     setupStompClient(TokenManager.getClaims()?.sub);
   }, []);
   console.log(stompClient);
-  
+
   return (
     <div className="font">
       <Header
         messagesReceived={messagesReceived}
-        handleSearchReslut={handleSearchReslut}
+        handleSearchResult={handleSearchResult}
       />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage searchResult={searchResult} />} />
+          <Route
+            path="/"
+            element={<HomePage searchResults={searchResults} />}
+          />
           <Route
             path="/home"
-            element={<HomePage searchResult={searchResult} />}
+            element={<HomePage searchResults={searchResults} />}
           />
           <Route
             path="/home/all/product/categories"
-            element={<HomePage searchResult={searchResult} />}
+            element={<HomePage searchResults={searchResults} />}
           />
           <Route
             path="/home/all/product/category/:categoryId/:categoryName"
-            element={<HomePage searchResult={searchResult} />}
+            element={<HomePage searchResults={searchResults} />}
           />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />

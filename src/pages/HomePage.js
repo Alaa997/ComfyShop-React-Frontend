@@ -27,19 +27,15 @@ const HomePage = (props) => {
   };
 
   const handleSearch = () => {
-    console.log(props.searchResult);
-    const searchQuery = props.searchResult;
-    const filteredProducts = products.filter((product) =>
-      product.name.toLowerCase().includes(searchQuery)
-    );
-    setFilteredProducts(filteredProducts);
+    console.log(props.searchResults);
+    setFilteredProducts(props.searchResults);
   };
 
   useEffect(() => {
-    if (props.searchResult) {
+    if (props.searchResults) {
       handleSearch();
     }
-  }, [props.searchResult]);
+  }, [props.searchResults]);
 
   const handleDeleteCategory = (categoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
@@ -92,6 +88,11 @@ const HomePage = (props) => {
               maxWidth: "75%",
             }}
           >
+            {/* <input
+              type="text"
+              // onChange={() => handleSearch()}
+              placeholder="Search products..."
+            /> */}
             <div className="col-md-10">
               <div className="row row-cols-1 row-cols-md-4 g-4">
                 {filteredProducts.map((product) => (

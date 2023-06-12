@@ -34,3 +34,9 @@ export const deleteProduct = async (id) => {
   });
   return response.data;
 };
+
+export const searchProductsByName = async (name) => {
+  const url = `${productAPI}/search?name=${name}`;
+  const response = await axios.get(url);
+  return response.data;
+};
