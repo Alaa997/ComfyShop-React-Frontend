@@ -26,13 +26,20 @@ const HomePage = (props) => {
     }
   };
 
-  const handleSearch = (event) => {
-    const searchQuery = event.target.value.toLowerCase();
+  const handleSearch = () => {
+    console.log(props.searchResult);
+    const searchQuery = props.searchResult;
     const filteredProducts = products.filter((product) =>
       product.name.toLowerCase().includes(searchQuery)
     );
     setFilteredProducts(filteredProducts);
   };
+
+  useEffect(() => {
+    if (props.searchResult) {
+      handleSearch();
+    }
+  }, [props.searchResult]);
 
   const handleDeleteCategory = (categoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
@@ -54,7 +61,7 @@ const HomePage = (props) => {
 
   useEffect(() => {
     filterProducts();
-  }, [categories, products]); // Update products when categories change
+  }, [categories]); // Update products when categories change
 
   return (
     <Container fluid>
@@ -85,11 +92,6 @@ const HomePage = (props) => {
               maxWidth: "75%",
             }}
           >
-            <input
-              type="text"
-              onChange={handleSearch}
-              placeholder="Search products..."
-            />
             <div className="col-md-10">
               <div className="row row-cols-1 row-cols-md-4 g-4">
                 {filteredProducts.map((product) => (

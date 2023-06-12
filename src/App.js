@@ -19,12 +19,12 @@ import TokenManager from "./APIs/TokenManager";
 
 function App() {
   const [stompClient, setStompClient] = useState();
-  const [searchResult, setSearchResult] = useState([]);
   const [messagesReceived, setMessagesReceived] = useState([]);
+  const [searchResult, setSearchResult] = useState([]);
 
-  const handleSearchReslut = (e) => {
-    console.log(e.target.value)
-    setSearchResult(e.target.value);
+  const handleSearchReslut = (event) => {
+    console.log(event.target.value.toLowerCase());
+    setSearchResult(event.target.value.toLowerCase());
   };
 
   const setupStompClient = (username) => {
@@ -95,15 +95,18 @@ function App() {
       />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage searchResult={searchResult} />} />
           <Route
             path="/home"
             element={<HomePage searchResult={searchResult} />}
           />
-          <Route path="/home/all/product/categories" element={<HomePage />} />
+          <Route
+            path="/home/all/product/categories"
+            element={<HomePage searchResult={searchResult} />}
+          />
           <Route
             path="/home/all/product/category/:categoryId/:categoryName"
-            element={<HomePage />}
+            element={<HomePage searchResult={searchResult} />}
           />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
