@@ -46,10 +46,9 @@ const ChartComponent = () => {
     is3D: true,
   };
 
-  const data = products.map((product) => [
-    product.productName,
-    product.count.toString(),
-  ]);
+  const data = products.map((product) => [product.productName, product.count]);
+
+  console.log(data);
 
   return (
     <div className="chart-container">

@@ -8,8 +8,8 @@ export const getSessionId = async (userId) => {
     headers: AuthHeader(),
   });
   // localStorage.setItem("sessionId", response.data);
-//  const data = await response.json();
- return response.data;
+  //  const data = await response.json();
+  return response.data;
 };
 
 export const placeOrder = async (shoppingSessionId, userId) => {

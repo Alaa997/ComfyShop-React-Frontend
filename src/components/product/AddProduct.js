@@ -84,7 +84,6 @@ const AddProduct = (props) => {
     };
   }, []);
 
-
   return (
     <div>
       <div className="mt-2 d-flex aligns-items-center justify-content-center">
