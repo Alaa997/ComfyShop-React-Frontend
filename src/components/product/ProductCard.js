@@ -63,7 +63,7 @@ const ProductCard = ({ product }) => {
             textDecoration: "none",
           }}
         > */}
-        <Card.Img style={{ height: "228px", width: "100%" }} src={pic} />
+        <Card.Img style={{ height: "228px", width: "100%" }} src={product.photo} />
         <div className="d-flex justify-content-end mx-2">
           <img
             src={favoff}

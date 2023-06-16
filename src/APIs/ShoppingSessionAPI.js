@@ -14,10 +14,7 @@ export const getSessionId = async (userId) => {
 
 export const placeOrder = async (shoppingSessionId, userId) => {
   const response = await axios.put(
-    `${ORDER_API}/${shoppingSessionId}/${userId}`,
-    {
-      headers: AuthHeader(),
-    }
+    `${ORDER_API}/${shoppingSessionId}/${userId}`
   );
   return response.data;
 };

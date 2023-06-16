@@ -16,6 +16,8 @@ const AddProduct = (props) => {
     name: "",
     description: "",
     price: "",
+    quantity: "",
+    photo: null,
   });
 
   const getAllCategories = async () => {
@@ -34,6 +36,9 @@ const AddProduct = (props) => {
     if (!product.price) {
       errors.price = "This field is required";
     }
+    if (!product.quantity) {
+      errors.quantity = "This field is required";
+    }
     return errors;
   };
 
@@ -47,33 +52,40 @@ const AddProduct = (props) => {
     setSelectedCategory({ id, name });
   };
 
+  const handleFileChange = (e) => {
+    setProduct({ ...product, photo: e.target.files[0] });
+  };
+
   const saveProduct = async (event) => {
     event.preventDefault();
 
     const errors = required();
     setError(errors);
     if (Object.keys(errors).length === 0) {
-      addProduct({
-        ...product,
-        category: selectedCategory,
-      })
-        .then((res) => {
-          console.log(res.status);
-          if (res.status === 201) {
-            toast.success("Successfully created!");
-            props.sendMessage({ text: "New Product is added!" });
-          } else if (res.status === 400) {
-            toast.success("This product already exists.");
-          }
+      const productData = new FormData();
+      productData.append("name", product.name);
+      productData.append("description", product.description);
+      productData.append("price", product.price);
+      productData.append("quantity", product.quantity);
+      productData.append("photo", product.photo);
+      productData.append("category", JSON.stringify(selectedCategory));
 
-          setTimeout(() => {
-            navigate("/");
-          }, 1500);
-        })
-        .catch((error) => {
-          console.log(error);
-          toast.error("Something went wrong!");
-        });
+      try {
+        const response = await addProduct(productData);
+        if (response.status === 201) {
+          toast.success("Successfully created!");
+          props.sendMessage({ text: "New Product is added!" });
+        } else if (response.status === 400) {
+          toast.success("This product already exists.");
+        }
+
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong!");
+      }
     }
   };
 
@@ -124,7 +136,7 @@ const AddProduct = (props) => {
                   onChange={handleInput}
                   value={product.description}
                 />
-                {error.name && (
+                {error.description && (
                   <span className="text-danger">{error.description}</span>
                 )}
               </div>
@@ -161,8 +173,25 @@ const AddProduct = (props) => {
                   onChange={handleInput}
                   value={product.price}
                 />
-                {error.name && (
+                {error.price && (
                   <span className="text-danger">{error.price}</span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="quantity" className="form-label">
+                  <b>Product Quantity</b>
+                </label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="quantity"
+                  name="quantity"
+                  onChange={handleInput}
+                  value={product.quantity}
+                />
+                {error.quantity && (
+                  <span className="text-danger">{error.quantity}</span>
                 )}
               </div>
 
@@ -175,8 +204,7 @@ const AddProduct = (props) => {
                   type="file"
                   id="formFile"
                   name="photo"
-                  value={product.photo}
-                  // onChange={(e) => setSelectedPhoto(e.target.files[0])}
+                  onChange={handleFileChange}
                 />
               </div>
 

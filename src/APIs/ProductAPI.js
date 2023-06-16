@@ -40,3 +40,17 @@ export const searchProductsByName = async (name) => {
   const response = await axios.get(url);
   return response.data;
 };
+
+// export const uploadPhoto = async (photo, id) => {
+//   try {
+//     const response = await apiRequest({
+//       method: "PUT",
+//       url: `${productAPI}/photo/${id}`,
+//       data: photo,
+//     });
+//     return response;
+//   } catch (error) {
+//     console.error("Error uploading photo");
+//     throw error;
+//   }
+// };
