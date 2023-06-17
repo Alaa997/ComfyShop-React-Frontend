@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../APIs/AuthAPI";
+import TokenManager from "../../APIs/TokenManager";
 
-const Login = (props) => {
+const Login = () => {
   const navigate = useNavigate();
   const [loginRequest, setLoginRequest] = useState({ email: "", password: "" });
 
@@ -29,9 +30,14 @@ const Login = (props) => {
     setErrors(required());
     const errors = Object.values(required());
     if (errors.length === 0) {
-      login(loginRequest);
-      navigate("/home");
-      // window.location.reload(true);
+      login(loginRequest)
+        .then((response) => response.data.accessToken)
+        .then((accessToken) => {
+          TokenManager.setAccessToken(accessToken);
+          navigate("/home");
+          window.location.reload();
+        })
+        .catch((error) => console.log(error));
     }
   };
 

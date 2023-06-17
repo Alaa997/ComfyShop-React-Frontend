@@ -49,7 +49,7 @@ const Order = () => {
                           <div className="row">
                             <div className="col-md-2">
                               <img
-                                src={mobile1}
+                                src={cartItem.product.photo}
                                 className="img-fluid"
                                 alt="Phone"
                               />

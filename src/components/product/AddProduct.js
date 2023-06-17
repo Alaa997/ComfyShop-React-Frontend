@@ -16,7 +16,6 @@ const AddProduct = (props) => {
     name: "",
     description: "",
     price: "",
-    quantity: "",
     photo: null,
   });
 
@@ -35,9 +34,6 @@ const AddProduct = (props) => {
     }
     if (!product.price) {
       errors.price = "This field is required";
-    }
-    if (!product.quantity) {
-      errors.quantity = "This field is required";
     }
     return errors;
   };
@@ -175,23 +171,6 @@ const AddProduct = (props) => {
                 />
                 {error.price && (
                   <span className="text-danger">{error.price}</span>
-                )}
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="quantity" className="form-label">
-                  <b>Product Quantity</b>
-                </label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="quantity"
-                  name="quantity"
-                  onChange={handleInput}
-                  value={product.quantity}
-                />
-                {error.quantity && (
-                  <span className="text-danger">{error.quantity}</span>
                 )}
               </div>
 

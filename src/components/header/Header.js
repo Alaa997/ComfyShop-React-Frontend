@@ -9,19 +9,20 @@ import { Container, FormControl, Nav, Navbar } from "react-bootstrap";
 import { Toaster, toast } from "react-hot-toast";
 
 const Header = (props) => {
-  const [claims, setClaims] = useState(TokenManager.getClaims());
+  // const [claims, setClaims] = useState(TokenManager.getClaims());
 
-
-    // toast.success(adminMsg[0]?.text);
+  // toast.success(adminMsg[0]?.text);
 
   // useEffect(() => {
   //   setAdminmsg(props.messagesReceived);
   // }, [props.messagesReceived]);
 
-  const handleLogout = () => {
-    TokenManager.clear();
-    setClaims(null);
-  };
+  // useEffect(() => {}, [TokenManager.getClaims()]);
+
+  // const handleLogout = () => {
+  //   TokenManager.clear();
+  //   setClaims(null);
+  // };
 
   return (
     <>
@@ -49,15 +50,15 @@ const Header = (props) => {
             />
 
             <Nav className="mx-auto">
-              {claims ? (
+              {props.claims ? (
                 <>
-                  {claims.roles.includes("ADMIN") ? (
+                  {props.claims.roles.includes("ADMIN") ? (
                     <AdminHeader />
                   ) : (
                     <UserHeader {...props} />
                   )}
                   <Nav.Link
-                    onClick={handleLogout}
+                    onClick={() => props.handleLogout()}
                     className="nav-text d-flex mt-3 justify-content-end"
                     style={{ color: "white" }}
                   >

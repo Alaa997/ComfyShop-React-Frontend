@@ -1,18 +1,14 @@
 import React from "react";
 import { Button, Card, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import pic from "../../Images/pic.png";
-import favoff from "../../Images/fav-off.png";
-import TokenManager from "../../APIs/TokenManager";
 import { addTocart } from "../../APIs/CartAPI";
 import { getRole } from "../../APIs/AuthAPI";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { deleteProduct } from "../../APIs/ProductAPI";
-import { toast } from "react-hot-toast";
 import { getSessionId } from "../../APIs/ShoppingSessionAPI";
+import TokenManager from "../../APIs/TokenManager";
 
-const ProductCard = ({ product }) => {
+const ProductCard = (props) => {
   const isAdmin = getRole() === "ADMIN";
   const navigate = useNavigate();
 
@@ -21,26 +17,19 @@ const ProductCard = ({ product }) => {
   };
 
   const handleAddToCart = async (selectedProduct) => {
-    const userId = TokenManager.getClaims().userId;
-    const cartData = {
-      sessionId: await getSessionId(userId),
-      product: selectedProduct,
-      quantity: 1,
-    };
-    const res = await addTocart(cartData);
-  };
+    try {
+      const userId = TokenManager.getClaims().userId;
+      const sessionId = await getSessionId(userId);
 
-  const handleDeleteProduct = (productId) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      deleteProduct(productId)
-        .then(() => {
-          navigate("/");
-          toast.success("Successfully removed!");
-        })
-        .catch((error) => {
-          console.log(error);
-          toast.error("Something went wrong!");
-        });
+      const cartData = {
+        sessionId: sessionId,
+        product: selectedProduct,
+        quantity: 1,
+      };
+
+      await addTocart(cartData);
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
     }
   };
 
@@ -57,51 +46,38 @@ const ProductCard = ({ product }) => {
           boxShadow: "0 2px 2px 0 rgba(151,151,151,0.5)",
         }}
       >
-        {/* <Link
-          to="/products/:id"
-          style={{
-            textDecoration: "none",
-          }}
-        > */}
-        <Card.Img style={{ height: "228px", width: "100%" }} src={product.photo} />
-        <div className="d-flex justify-content-end mx-2">
-          <img
-            src={favoff}
-            alt=""
-            className="text-center"
-            style={{
-              height: "24px",
-              width: "26px",
-            }}
-          />
-        </div>
+        <Card.Img
+          style={{ height: "228px", width: "100%" }}
+          src={props.product.photo}
+          alt={props.product.name}
+        />
         <Card.Body>
           <Card.Title>
-            <div className="card-title">{product.name}</div>
+            <div className="card-title">{props.product.name}</div>
           </Card.Title>
           <Card.Text>
             <span className="d-flex justify-content-between">
               {!isAdmin ? (
                 <Link
-                  to={`/cart?id=${product}`}
+                  to={`/cart?id=${props.product}`}
                   className="btn btn-success"
-                  onClick={() => handleAddToCart(product)}
+                  onClick={() => handleAddToCart(props.product)}
                 >
                   Add to Cart
                 </Link>
               ) : (
                 <>
                   <Link
-                    to={`/update-product/${product.id}`}
+                    to={`/update-product/${props.product.id}`}
                     className="btn btn-success"
-                    onClick={() => updateProduct(product.id)}
+                    onClick={() => updateProduct(props.product.id)}
                   >
                     Update Product
                   </Link>
                   <Button
                     variant="link"
                     className="delete-icon"
-                    onClick={() => handleDeleteProduct(product.id)}
+                    onClick={() => props.handleDeleteProduct(props.product.id)}
                     style={{ marginLeft: "auto", color: "red" }}
                   >
                     <FontAwesomeIcon icon={faTrash} />
@@ -109,12 +85,11 @@ const ProductCard = ({ product }) => {
                 </>
               )}
               <span className="d-flex">
-                <span className="card-price">{product.price} $</span>
+                <span className="card-price">{props.product.price} $</span>
               </span>
             </span>
           </Card.Text>
         </Card.Body>
-        {/* </Link> */}
       </Card>
     </Col>
   );

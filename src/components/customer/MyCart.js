@@ -4,18 +4,18 @@ import { getSessionId, placeOrder } from "../../APIs/ShoppingSessionAPI";
 import { Toaster, toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import TokenManager from "../../APIs/TokenManager";
-import mobile1 from "../../Images/mobile1.png";
 
 const MyCart = () => {
   const userId = TokenManager.getClaims().userId;
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
 
-  const deleteProductFromCart = async(cartId) => {
-     console.log(cartId);
+  const deleteProductFromCart = async (cartId) => {
+    console.log(cartId);
     const response = await deleteCartItem(cartId);
-
     console.log(response);
+    // Remove the deleted item from the cartItems state
+    setCartItems(cartItems.filter((item) => item.id !== cartId));
   };
 
   const checkout = async () => {
@@ -50,7 +50,7 @@ const MyCart = () => {
       }
     };
     getMyCart();
-  }, []);
+  }, [userId]); // Add userId as a dependency for the useEffect hook
 
   return (
     <div className="mt-3">
@@ -85,20 +85,17 @@ const MyCart = () => {
                   return (
                     <tr key={cartData.id}>
                       <td>
-                        {/* <img
-                          src={
-                            "http://localhost:8080/api/product/" +
-                            cartData.productImage
-                          }
-                          class="img-fluid"
+                        <img
+                          src={cartData.product.photo}
+                          className="img-fluid"
                           alt="product_pic"
                           style={{
                             maxWidth: "90px",
-                          }
-                        /> */}
+                          }}
+                        />
                       </td>
                       <td>
-                        <b>{cartData.product.name}</b>j
+                        <b>{cartData.product.name}</b>
                       </td>
                       <td>
                         <b>{cartData.product.description}</b>

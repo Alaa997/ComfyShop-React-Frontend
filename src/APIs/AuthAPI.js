@@ -6,21 +6,31 @@ const API_URL = "http://localhost:8081/user";
 
 export const register = async (user) => {
   const response = await axios.post(API_URL + "/sign-up", user);
-  console.log("Response:", response);
-  // Process the response or return it if needed
   return response;
 };
 
-export const login = (data) => {
+// export const logint = (data) => {
+//   const headers = {
+//     "Content-Type": "application/json",
+//   };
+//   console.log(data);
+//   axios
+//     .post("http://localhost:8081/user/login", data, headers)
+//     .then((response) => response.data.accessToken)
+//     .then((accessToken) => TokenManager.setAccessToken(accessToken))
+//     .catch((error) => console.log(error));
+// };
+
+export const login = async (data) => {
   const headers = {
     "Content-Type": "application/json",
   };
-  console.log(data);
-  axios
-    .post("http://localhost:8081/user/login", data, headers)
-    .then((response) => response.data.accessToken)
-    .then((accessToken) => TokenManager.setAccessToken(accessToken))
-    .catch((error) => console.log(error));
+  const response = await axios.post(
+    "http://localhost:8081/user/login",
+    data,
+    headers
+  );
+  return response;
 };
 
 export const getCurrentUser = async () => {

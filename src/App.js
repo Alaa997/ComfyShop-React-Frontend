@@ -23,10 +23,17 @@ function App() {
   const [messagesReceived, setMessagesReceived] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
 
+  const [claims, setClaims] = useState(TokenManager.getClaims());
+  const handleLogout = () => {
+    TokenManager.clear();
+    setClaims(null);
+  };
+  useEffect(() => {
+    setClaims(TokenManager.getClaims());
+  }, [setClaims]); 
+
   const handleSearchResult = async (event) => {
-    // console.log(event.target.value.toLowerCase());
-    // setSearchResults(event.target.value.toLowerCase());
-  
+
     const searchQuery = event.target.value.toLowerCase();
     try {
       const response = await searchProductsByName(searchQuery);
@@ -101,6 +108,8 @@ function App() {
       <Header
         messagesReceived={messagesReceived}
         handleSearchResult={handleSearchResult}
+        claims={claims}
+        handleLogout={handleLogout}
       />
       <BrowserRouter>
         <Routes>

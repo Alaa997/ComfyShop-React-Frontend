@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getProducts } from "../APIs/ProductAPI";
+import { deleteProduct, getProducts } from "../APIs/ProductAPI";
 import Slider from "../components/header/Slider";
 import ProductCard from "../components/product/ProductCard";
 import { Container } from "react-bootstrap";
@@ -51,6 +51,20 @@ const HomePage = (props) => {
     }
   };
 
+  const handleDeleteProduct = (productId) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      deleteProduct(productId)
+        .then(() => {
+          filterProducts();
+          toast.success("Successfully removed!");
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error("Something went wrong!");
+        });
+    }
+  };
+
   useEffect(() => {
     getAllCategories();
   }, []);
@@ -96,7 +110,11 @@ const HomePage = (props) => {
             <div className="col-md-10">
               <div className="row row-cols-1 row-cols-md-4 g-4">
                 {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    handleDeleteProduct={handleDeleteProduct}
+                  />
                 ))}
               </div>
             </div>
