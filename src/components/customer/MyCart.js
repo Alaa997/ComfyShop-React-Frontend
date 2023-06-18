@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { addTocart, deleteCartItem, getCartItems } from "../../APIs/CartAPI";
+import { deleteCartItem, getCartItems } from "../../APIs/CartAPI";
 import { getSessionId, placeOrder } from "../../APIs/ShoppingSessionAPI";
 import { Toaster, toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -12,11 +12,25 @@ const MyCart = () => {
   const [totalPrice, setTotalPrice] = useState(0);
 
   const deleteProductFromCart = async (cartId) => {
-    console.log(cartId);
-    const response = await deleteCartItem(cartId);
-    console.log(response);
-    // Remove the deleted item from the cartItems state
-    setCartItems(cartItems.filter((item) => item.id !== cartId));
+    try {
+      console.log(cartId);
+      const response = await deleteCartItem(cartId);
+      console.log(response);
+      // Remove the deleted item from the cartItems state
+      setCartItems(cartItems.filter((item) => item.id !== cartId));
+
+      // Calculate the new total price
+      let newTotalPrice = 0;
+      cartItems.forEach((cartData) => {
+        if (cartData.id !== cartId) {
+          newTotalPrice += cartData.product.price * cartData.quantity;
+        }
+      });
+      setTotalPrice(newTotalPrice);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete item from cart.");
+    }
   };
 
   const checkout = async () => {
