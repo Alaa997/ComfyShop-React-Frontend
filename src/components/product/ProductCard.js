@@ -16,6 +16,17 @@ const ProductCard = (props) => {
     navigate(`/products/${productId}`);
   };
 
+  //   const handleAddToCart = async (selectedProduct) => {
+  //   const userId = TokenManager.getClaims()?.userId;
+  //   if (userId) {
+  //     localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct));
+  //     navigate(`/cart?id=${selectedProduct.id}`);
+  //   } else {
+  //     localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct));
+  //     navigate(`/login`);
+  //   }
+  // };
+
   const handleAddToCart = async (selectedProduct) => {
     try {
       const userId = TokenManager.getClaims().userId;
@@ -59,16 +70,24 @@ const ProductCard = (props) => {
             <span className="d-flex justify-content-between">
               {!isAdmin ? (
                 <Link
-                  to={`/cart?id=${props.product}`}
+                  to={TokenManager.getClaims()?.userId ? `/cart` : `/login`}
                   className="btn btn-success"
-                  onClick={() => handleAddToCart(props.product)}
+                  onClick={() =>
+                    TokenManager.getClaims()?.userId
+                      ? handleAddToCart(props.product)
+                      : () => {}
+                  }
                 >
                   Add to Cart
                 </Link>
               ) : (
                 <>
                   <Link
-                    to={`/update-product/${props.product.id}`}
+                    to={
+                      TokenManager.getClaims()?.userId
+                        ? `/update-product/${props.product}`
+                        : `/login`
+                    }
                     className="btn btn-success"
                     onClick={() => updateProduct(props.product.id)}
                   >

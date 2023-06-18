@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { deleteCartItem, getCartItems } from "../../APIs/CartAPI";
+import { addTocart, deleteCartItem, getCartItems } from "../../APIs/CartAPI";
 import { getSessionId, placeOrder } from "../../APIs/ShoppingSessionAPI";
 import { Toaster, toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import TokenManager from "../../APIs/TokenManager";
 
 const MyCart = () => {
-  const userId = TokenManager.getClaims().userId;
+  const userId = TokenManager.getClaims()?.userId;
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
 
@@ -26,7 +26,7 @@ const MyCart = () => {
       placeOrder(shoppingSessionId, userId)
         .then((res) => {
           console.log(res);
-          toast.success("Successfully created!");
+          toast.success("Your order us confirmed!");
           setTimeout(() => {
             navigate("/order");
           }, 1500);
@@ -41,16 +41,32 @@ const MyCart = () => {
     }
   };
 
-  useEffect(() => {
-    const getMyCart = async () => {
-      const shoppingSessionId = await getSessionId(userId);
-      const myCart = await getCartItems(shoppingSessionId);
-      if (myCart) {
+  const getMyCart = async () => {
+    const shoppingSessionId = await getSessionId(userId);
+    const myCart = await getCartItems(shoppingSessionId);
+
+    if (
+      myCart &&
+      (myCart.length !== cartItems.length || cartItems.length === 0)
+    ) {
+      setCartItems(myCart);
+    } else if (myCart) {
+      const quantitiesMatch = myCart.every((item) => {
+        const matchingCartItem = cartItems.find(
+          (cartItem) => cartItem.id === item.id
+        );
+        return matchingCartItem && matchingCartItem.quantity === item.quantity;
+      });
+
+      if (!quantitiesMatch) {
         setCartItems(myCart);
       }
-    };
+    }
+  };
+
+  useEffect(() => {
     getMyCart();
-  }, [userId]); // Add userId as a dependency for the useEffect hook
+  }, [cartItems]); // Add userId as a dependency for the useEffect hook
 
   return (
     <div className="mt-3">
@@ -120,22 +136,24 @@ const MyCart = () => {
         </div>
         <div className="card-footer custom-bg">
           <div className="float-right">
-            <div
-              className="text-color me-2"
-              style={{
-                textAlign: "right",
-              }}
-            >
+            <div className="text-color me-2" style={{ textAlign: "right" }}>
               {/* <h5>Total Price: &#8377; {totatPrice}/-</h5> */}
             </div>
 
             <div className="float-end me-2">
               <button
                 type="submit"
-                className="btn bg-color custom-bg-text mb-3"
+                className="btn btn-primary mb-3"
                 onClick={() => checkout()}
               >
                 Checkout
+              </button>
+              <button
+                type="submit"
+                className="btn btn-secondary mb-3 ms-2"
+                onClick={() => navigate("/home")}
+              >
+                Continue Shopping
               </button>
               <Toaster />
             </div>
