@@ -8,12 +8,7 @@ import { Container, FormControl, Nav, Navbar } from "react-bootstrap";
 const Header = (props) => {
   return (
     <>
-      <Navbar
-        className="sticky-top"
-        bg="dark"
-        variant="dark"
-        expand="sm"
-      >
+      <Navbar className="sticky-top" bg="dark" variant="dark" expand="sm">
         <Container>
           <Navbar.Brand>
             <a href="/">
@@ -29,7 +24,12 @@ const Header = (props) => {
               aria-label="Search"
               onChange={(e) => props.handleSearchResult(e)}
             />
-
+            <Nav.Link
+              href="/home"
+              className="nav-text d-flex mt-3 justify-content-end"
+            >
+              <p style={{ color: "white" }}> Home</p>
+            </Nav.Link>
             <Nav className="mx-auto">
               {props.claims ? (
                 <>
@@ -51,7 +51,6 @@ const Header = (props) => {
               )}
             </Nav>
           </Navbar.Collapse>
-          {/* <Toaster /> */}
         </Container>
       </Navbar>
     </>
