@@ -9,6 +9,7 @@ const MyCart = () => {
   const userId = TokenManager.getClaims()?.userId;
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const deleteProductFromCart = async (cartId) => {
     console.log(cartId);
@@ -44,14 +45,20 @@ const MyCart = () => {
   const getMyCart = async () => {
     const shoppingSessionId = await getSessionId(userId);
     const myCart = await getCartItems(shoppingSessionId);
-    // console.log(myCart)
-
+    console.log(myCart);
     setCartItems(myCart);
+
+    // Calculate the total price
+    let total = 0;
+    myCart.forEach((cartData) => {
+      total += cartData.product.price * cartData.quantity;
+    });
+    setTotalPrice(total);
   };
 
   useEffect(() => {
     getMyCart();
-  }, []); 
+  }, []);
 
   return (
     <div className="mt-3">
@@ -78,6 +85,7 @@ const MyCart = () => {
                   <th scope="col">Name</th>
                   <th scope="col">Description</th>
                   <th scope="col">Quantity</th>
+                  <th scope="col">Price</th>
                   <th scope="col">Action</th>
                 </tr>
               </thead>
@@ -105,6 +113,13 @@ const MyCart = () => {
                         <b>{cartData.quantity}</b>
                       </td>
                       <td>
+                        <b>
+                          {(cartData.product.price * cartData.quantity).toFixed(
+                            2
+                          )}
+                        </b>
+                      </td>
+                      <td>
                         <button
                           className="btn bg-color custom-bg-text btn-sm"
                           onClick={() => deleteProductFromCart(cartData.id)}
@@ -122,7 +137,7 @@ const MyCart = () => {
         <div className="card-footer custom-bg">
           <div className="float-right">
             <div className="text-color me-2" style={{ textAlign: "right" }}>
-              {/* <h5>Total Price: &#8377; {totatPrice}/-</h5> */}
+              <h5>Total Price: $ {totalPrice.toFixed(2)}</h5>
             </div>
 
             <div className="float-end me-2">
