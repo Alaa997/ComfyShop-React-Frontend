@@ -14,10 +14,15 @@ export const getSessionId = async (userId) => {
 
 export const placeOrder = async (shoppingSessionId, userId) => {
   const response = await axios.put(
-    `${ORDER_API}/${shoppingSessionId}/${userId}`
+    `${ORDER_API}/${shoppingSessionId}/${userId}`,
+    {},
+    {
+      headers: AuthHeader(),
+    }
   );
   return response.data;
 };
+
 
 export const getOrders = async (userId) => {
   const response = await axios.get(`${ORDER_API}/orders/${userId}`, {
