@@ -159,8 +159,9 @@ const MyCart = () => {
                 type="submit"
                 className="btn btn-primary mb-3"
                 onClick={() => checkout()}
+                disabled={cartItems.length === 0}
               >
-                Checkout
+                Place order
               </button>
               <button
                 type="submit"

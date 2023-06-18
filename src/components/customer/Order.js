@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import mobile1 from "../../Images/mobile1.png";
 import { getOrders } from "../../APIs/ShoppingSessionAPI";
 import TokenManager from "../../APIs/TokenManager";
 import { getCurrentUser } from "../../APIs/AuthAPI";
