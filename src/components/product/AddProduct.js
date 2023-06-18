@@ -1,6 +1,4 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
 import { getCategories } from "../../APIs/CategoryAPI";
@@ -8,8 +6,7 @@ import { addProduct } from "../../APIs/ProductAPI";
 
 const AddProduct = (props) => {
   const navigate = useNavigate();
-  const [error, setError] = useState("");
-
+  const [error, setError] = useState({});
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});
   const [product, setProduct] = useState({
@@ -19,43 +16,71 @@ const AddProduct = (props) => {
     photo: null,
   });
 
+  useEffect(() => {
+    getAllCategories();
+    return () => {
+      // Cleanup code if needed
+    };
+  }, []);
+
   const getAllCategories = async () => {
     const allCategories = await getCategories();
     allCategories && setCategories(allCategories);
   };
 
-  const required = () => {
+  const validateInputs = () => {
     let errors = {};
-    if (!product.name) {
-      errors.name = "This field is required";
-    }
-    if (!product.description) {
-      errors.description = "This field is required";
-    }
+
+     if (!product.name.trim()) {
+       errors.name = "Product Name is required";
+     } else if (/^\d/.test(product.name.trim())) {
+       errors.name = "Product Name cannot start with a number";
+     }
+
+     if (!product.description.trim()) {
+       errors.description = "Product Description is required";
+     } else if (/^\d/.test(product.description.trim())) {
+       errors.description = "Product Description cannot start with a number";
+     }
+
     if (!product.price) {
-      errors.price = "This field is required";
+      errors.price = "Product Price is required";
+    } else if (isNaN(product.price) || +product.price <= 0) {
+      errors.price = "Product Price must be a positive number";
     }
+
+    if (!selectedCategory.id) {
+      errors.category = "Category is required";
+    }
+
+    if (!product.photo) {
+      errors.photo = "Product Image is required";
+    }
+
     return errors;
   };
 
   const handleInput = (e) => {
     e.preventDefault();
+    setError({ ...error, [e.target.name]: "" }); // Clear the specific error message
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
   const handleSelectedCategory = (e) => {
     const { id, name } = JSON.parse(e.target.value);
     setSelectedCategory({ id, name });
+    setError({ ...error, category: "" }); // Clear the category error message
   };
 
   const handleFileChange = (e) => {
     setProduct({ ...product, photo: e.target.files[0] });
+    setError({ ...error, photo: "" }); // Clear the photo error message
   };
 
   const saveProduct = async (event) => {
     event.preventDefault();
 
-    const errors = required();
+    const errors = validateInputs();
     setError(errors);
     if (Object.keys(errors).length === 0) {
       const productData = new FormData();
@@ -72,7 +97,7 @@ const AddProduct = (props) => {
           toast.success("Successfully created!");
           props.sendMessage({ text: "New Product is added!" });
         } else if (response.status === 400) {
-          toast.success("This product already exists.");
+          toast.error("This product already exists.");
         }
 
         setTimeout(() => {
@@ -84,13 +109,6 @@ const AddProduct = (props) => {
       }
     }
   };
-
-  useEffect(() => {
-    getAllCategories();
-    return () => {
-      // Cleanup code if needed
-    };
-  }, []);
 
   return (
     <div>
@@ -155,6 +173,9 @@ const AddProduct = (props) => {
                     </option>
                   ))}
                 </select>
+                {error.category && (
+                  <span className="text-danger">{error.category}</span>
+                )}
               </div>
 
               <div className="mb-3">
@@ -186,6 +207,9 @@ const AddProduct = (props) => {
                   name="photo"
                   onChange={handleFileChange}
                 />
+                {error.photo && (
+                  <span className="text-danger">{error.photo}</span>
+                )}
               </div>
 
               <button
