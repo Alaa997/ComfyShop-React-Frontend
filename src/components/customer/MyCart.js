@@ -26,7 +26,7 @@ const MyCart = () => {
       placeOrder(shoppingSessionId, userId)
         .then((res) => {
           console.log(res);
-          toast.success("Your order us confirmed!");
+          toast.success("Your order is confirmed!");
           setTimeout(() => {
             navigate("/order");
           }, 1500);
@@ -44,29 +44,14 @@ const MyCart = () => {
   const getMyCart = async () => {
     const shoppingSessionId = await getSessionId(userId);
     const myCart = await getCartItems(shoppingSessionId);
+    // console.log(myCart)
 
-    if (
-      myCart &&
-      (myCart.length !== cartItems.length || cartItems.length === 0)
-    ) {
-      setCartItems(myCart);
-    } else if (myCart) {
-      const quantitiesMatch = myCart.every((item) => {
-        const matchingCartItem = cartItems.find(
-          (cartItem) => cartItem.id === item.id
-        );
-        return matchingCartItem && matchingCartItem.quantity === item.quantity;
-      });
-
-      if (!quantitiesMatch) {
-        setCartItems(myCart);
-      }
-    }
+    setCartItems(myCart);
   };
 
   useEffect(() => {
     getMyCart();
-  }, [cartItems]); // Add userId as a dependency for the useEffect hook
+  }, []); 
 
   return (
     <div className="mt-3">
