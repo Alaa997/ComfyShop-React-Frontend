@@ -13,6 +13,7 @@ const UpdateProduct = () => {
     category: "",
     price: "",
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,6 +42,31 @@ const UpdateProduct = () => {
       ...prevFormData,
       [name]: value,
     }));
+
+    // Input format validations
+    const newErrors = { ...errors };
+    if (name === "name") {
+      if (!value.trim()) {
+        newErrors.name = "Product Name is required";
+      } else if (/^\d/.test(value.trim())) {
+        newErrors.name = "Product Name cannot start with a number";
+      } else {
+        delete newErrors.name;
+      }
+    }
+
+    if (name === "description") {
+      if (!value.trim()) {
+        newErrors.description = "Product Description is required";
+      } else if (/^\d/.test(value.trim())) {
+        newErrors.description =
+          "Product Description cannot start with a number";
+      } else {
+        delete newErrors.description;
+      }
+    }
+
+    setErrors(newErrors);
   };
 
   const handleUpdate = async (e) => {
@@ -95,6 +121,9 @@ const UpdateProduct = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                 />
+                {errors.name && (
+                  <span className="text-danger">{errors.name}</span>
+                )}
               </div>
               <div className="mb-3">
                 <label htmlFor="description" className="form-label">
@@ -108,6 +137,9 @@ const UpdateProduct = () => {
                   value={formData.description}
                   onChange={handleInputChange}
                 />
+                {errors.description && (
+                  <span className="text-danger">{errors.description}</span>
+                )}
               </div>
 
               <div className="mb-3">
