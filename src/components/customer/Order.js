@@ -65,7 +65,7 @@ const Order = () => {
                             </div>
                             <div className="col-md-2 text-center d-flex justify-content-center align-items-center">
                               <p className="text-muted mb-0 small">
-                                {cartItem.quantity}
+                                {cartItem.quantity.toFixed(2)}
                               </p>
                             </div>
                             <div className="col-md-2 text-center d-flex justify-content-center align-items-center">
@@ -86,7 +86,7 @@ const Order = () => {
                     <div className="d-flex justify-content-between">
                       <p className="text-muted mb-0">
                         <span className="fw-bold me-4">Total</span> $
-                        {order.total}
+                        {order.total !== null ? order.total.toFixed(2) : ""}
                       </p>
                     </div>
                   </div>
