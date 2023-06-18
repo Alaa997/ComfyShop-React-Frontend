@@ -3,6 +3,7 @@ import { Button, Container, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../APIs/AuthAPI";
 import TokenManager from "../../APIs/TokenManager";
+import { Toaster, toast } from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -37,12 +38,20 @@ const Login = () => {
           navigate("/home");
           window.location.reload();
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          if (error.response && error.response.status === 400) {
+            toast.error("Invalid credentials. Please try again.");
+            setLoginRequest({ email: "", password: "" }); // Reset the input fields
+          } else {
+            console.log(error);
+          }
+        });
     }
   };
 
   return (
     <div className="my-background my-5 card p-3">
+      <Toaster />
       <Container>
         <Form onSubmit={handleLogin}>
           <h1>Login Form</h1>
