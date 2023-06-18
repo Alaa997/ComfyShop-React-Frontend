@@ -67,19 +67,15 @@ function SignUp() {
 
     const errors = Object.values(required());
     if (errors.length === 0) {
-      const response = await register(user);
-      const status = response.status;
-      console.log("Status:", status);
-
-      if (status === 201) {
-        toast.success("Registration successful!");
-        ref.current.value = " ";
-        navigate("/login");
-      } else if (status === 400) {
-        toast.error("This email already exists!");
-      } else {
-        toast.error("Registration failed. Please try again.");
-      }
+      register(user)
+        .then((response) => {
+            toast.success("Registration successful!");
+            ref.current.value = "";
+            navigate("/login");
+        })
+        .catch((error) => {
+          toast.error("This email is already taken!");
+        });
     }
   };
 
