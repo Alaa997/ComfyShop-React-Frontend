@@ -40,7 +40,7 @@ const Order = () => {
                         className="lead fw-normal mb-0"
                         style={{ color: "#512DA8" }}
                       >
-                        Orders
+                        Order
                       </p>
                     </div>
                     <div className="card shadow-0 border mb-4">
@@ -80,69 +80,14 @@ const Order = () => {
                             className="mb-4"
                             style={{ backgroundColor: "#e0e0e0", opacity: 1 }}
                           />
-                          <div className="row d-flex align-items-center">
-                            <div className="col-md-2">
-                              <p className="text-muted mb-0 small">
-                                Track Order
-                              </p>
-                            </div>
-                            <div className="col-md-10">
-                              <div
-                                className="progress"
-                                style={{ height: "6px", borderRadius: "16px" }}
-                              >
-                                <div
-                                  className="progress-bar"
-                                  role="progressbar"
-                                  style={{
-                                    width: "65%",
-                                    borderRadius: "16px",
-                                    backgroundColor: "#d1c4e9",
-                                  }}
-                                  aria-valuenow="65"
-                                  aria-valuemin="0"
-                                  aria-valuemax="100"
-                                ></div>
-                              </div>
-                              <div className="d-flex justify-content-around mb-1">
-                                <p className="text-muted mt-1 mb-0 small ms-xl-5">
-                                  Out for delivery
-                                </p>
-                                <p className="text-muted mt-1 mb-0 small ms-xl-5">
-                                  Delivered
-                                </p>
-                              </div>
-                            </div>
-                          </div>
                         </div>
                       ))}
                     </div>
 
-                    <div className="d-flex justify-content-between pt-2">
-                      <p className="fw-bold mb-0">Order Details</p>
-                    </div>
-
-                    <div className="d-flex justify-content-between pt-2">
-                      <p className="text-muted mb-0">Order ID : {order.id}</p>
-                    </div>
-
                     <div className="d-flex justify-content-between">
-                      <p className="text-muted mb-0">
-                        Order Date : {order.date}
-                      </p>
                       <p className="text-muted mb-0">
                         <span className="fw-bold me-4">Total</span> $
                         {order.total}
-                      </p>
-                    </div>
-
-                    <div className="d-flex justify-content-between mb-5">
-                      <p className="text-muted mb-0">
-                        Order Status : {order.orderStatus}
-                      </p>
-                      <p className="text-muted mb-0">
-                        <span className="fw-bold me-4">Delivery Charges</span>{" "}
-                        Free
                       </p>
                     </div>
                   </div>
