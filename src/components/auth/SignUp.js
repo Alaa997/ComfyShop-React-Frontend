@@ -22,21 +22,41 @@ function SignUp() {
 
     if (!user.firstName) {
       errors.firstName = "This field is required!";
+    } else if (user.firstName.length < 3) {
+      errors.firstName = "First name must be at least 3 characters long!";
+    } else if (!/^[A-Za-z]+$/.test(user.firstName)) {
+      errors.firstName = "First name should only contain letters!";
     }
+
     if (!user.lastName) {
       errors.lastName = "This field is required!";
+    } else if (user.lastName.length < 3) {
+      errors.lastName = "Last name must be at least 3 characters long!";
+    } else if (!/^[A-Za-z]+$/.test(user.lastName)) {
+      errors.lastName = "Last name should only contain letters!";
     }
+
     if (!user.email) {
       errors.email = "This field is required!";
+    } else if (
+      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(user.email)
+    ) {
+      errors.email = "Invalid email format!";
     }
+
     if (!user.password) {
       errors.password = "This field is required!";
+    } else if (user.password.length < 6) {
+      errors.password = "Password must be at least 6 characters long!";
     }
+
     if (!user.address) {
       errors.address = "This field is required!";
     }
+
     return errors;
   };
+
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
@@ -81,7 +101,6 @@ function SignUp() {
               value={user.firstName}
               placeholder="Enter your first name..."
               onChange={(e) => handleChange(e)}
-              // validations={[required]}
             />
             {errors.firstName && (
               <span className="text-danger">{errors.firstName}</span>
@@ -96,7 +115,6 @@ function SignUp() {
               value={user.lastName}
               placeholder="Enter your last name..."
               onChange={(e) => handleChange(e)}
-              // validations={[required]}
             />
             {errors.lastName && (
               <span className="text-danger">{errors.lastName}</span>
@@ -111,7 +129,6 @@ function SignUp() {
               value={user.email}
               placeholder="Enter your email address"
               onChange={(e) => handleChange(e)}
-              // validations={[required]}
             />
             {errors.email && (
               <span className="text-danger">{errors.email}</span>
@@ -126,7 +143,6 @@ function SignUp() {
               value={user.password}
               placeholder="Enter your password"
               onChange={(e) => handleChange(e)}
-              // validations={[required]}
             />
             {errors.password && (
               <span className="text-danger">{errors.password}</span>
@@ -136,12 +152,11 @@ function SignUp() {
             <Form.Label>Address</Form.Label>
             <Form.Control
               ref={ref}
-              type="address"
+              type="text"
               name="address"
               value={user.address}
               placeholder="Enter your address"
               onChange={(e) => handleChange(e)}
-              // validations={[required]}
             />
             {errors.address && (
               <span className="text-danger">{errors.address}</span>
