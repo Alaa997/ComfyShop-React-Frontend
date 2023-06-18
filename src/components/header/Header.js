@@ -3,7 +3,6 @@ import logo from "../../Images/logo.png";
 import NormalHeader from "./NormalHeader";
 import AdminHeader from "./AdminHeader";
 import UserHeader from "./UserHeader";
-import cart from "../../Images/cart.png";
 import { Container, FormControl, Nav, Navbar } from "react-bootstrap";
 
 const Header = (props) => {
@@ -14,7 +13,6 @@ const Header = (props) => {
         bg="dark"
         variant="dark"
         expand="sm"
-        // style={{ backgroundColor: "#856088" }}
       >
         <Container>
           <Navbar.Brand>

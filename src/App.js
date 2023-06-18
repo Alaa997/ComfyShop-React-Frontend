@@ -35,7 +35,7 @@ function App() {
 
   const handleSearchResult = async (event) => {
 
-    const searchQuery = event.target.value.toLowerCase();
+    const searchQuery = event.target.value.trim();
     try {
       const response = await searchProductsByName(searchQuery);
       setSearchResults(response);
