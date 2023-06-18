@@ -17,21 +17,17 @@ const ProductCard = (props) => {
   };
 
   const handleAddToCart = async (selectedProduct) => {
-    if (TokenManager.getClaims()?.userId) {
-      const userId = TokenManager.getClaims().userId;
-      const sessionId = await getSessionId(userId);
+    const userId = TokenManager.getClaims().userId;
+    const sessionId = await getSessionId(userId);
 
-      const cartData = {
-        sessionId: sessionId,
-        product: selectedProduct,
-        quantity: 1,
-      };
+    const cartData = {
+      sessionId: sessionId,
+      product: selectedProduct,
+      quantity: 1,
+    };
 
-      await addTocart(cartData);
-      navigate(`/cart`);
-    } else {
-      navigate(`/login`);
-    }
+    await addTocart(cartData);
+    navigate(`/cart`);
   };
 
   return (
@@ -58,7 +54,19 @@ const ProductCard = (props) => {
           </Card.Title>
           <Card.Text>
             <span className="d-flex justify-content-between">
-              {!isAdmin ? (
+              {isAdmin ? (
+                <Link
+                  to={
+                    TokenManager.getClaims()?.userId
+                      ? `/update-product/${props.product.id}`
+                      : `/login`
+                  }
+                  className="btn btn-success"
+                  onClick={() => updateProduct(props.product.id)}
+                >
+                  Update Product
+                </Link>
+              ) : getRole() === "CUSTOMER" ? (
                 <Link
                   // to={TokenManager.getClaims()?.userId ? `/cart` : `/login`}
                   className="btn btn-success"
@@ -66,28 +74,16 @@ const ProductCard = (props) => {
                 >
                   Add to Cart
                 </Link>
-              ) : (
-                <>
-                  <Link
-                    to={
-                      TokenManager.getClaims()?.userId
-                        ? `/update-product/${props.product}`
-                        : `/login`
-                    }
-                    className="btn btn-success"
-                    onClick={() => updateProduct(props.product.id)}
-                  >
-                    Update Product
-                  </Link>
-                  <Button
-                    variant="link"
-                    className="delete-icon"
-                    onClick={() => props.handleDeleteProduct(props.product.id)}
-                    style={{ marginLeft: "auto", color: "red" }}
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </Button>
-                </>
+              ) : null}
+              {isAdmin && (
+                <Button
+                  variant="link"
+                  className="delete-icon"
+                  onClick={() => props.handleDeleteProduct(props.product.id)}
+                  style={{ marginLeft: "auto", color: "red" }}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </Button>
               )}
               <span className="d-flex">
                 <span className="card-price">{props.product.price} $</span>

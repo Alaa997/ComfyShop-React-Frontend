@@ -14,27 +14,26 @@ const UpdateProduct = () => {
     price: "",
   });
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const selectedProduct = await getProductById(productId);
-      setProduct(selectedProduct);
-      setFormData({
-        name: selectedProduct.name,
-        description: selectedProduct.description,
-        category: selectedProduct.category
-          ? JSON.stringify(selectedProduct.category)
-          : "",
-        price: selectedProduct.price,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const selectedProduct = await getProductById(productId);
+        setProduct(selectedProduct);
+        setFormData({
+          name: selectedProduct.name,
+          description: selectedProduct.description,
+          category: selectedProduct.category
+            ? JSON.stringify(selectedProduct.category)
+            : "",
+          price: selectedProduct.price,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  fetchData();
-}, [productId]);
-
+    fetchData();
+  }, [productId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,7 +57,7 @@ useEffect(() => {
     update(productId, updatedProduct)
       .then((res) => {
         if (res.status === 204) {
-           console.log(res.status);
+          console.log(res.status);
           toast.success("Product updated successfully!");
         }
 
@@ -128,6 +127,7 @@ useEffect(() => {
                   name="price"
                   value={formData.price}
                   onChange={handleInputChange}
+                  min={1}
                 />
               </div>
               <button type="submit" className="btn btn-primary w-100">

@@ -72,9 +72,7 @@ const Order = () => {
                             <div className="col-md-2 text-center d-flex justify-content-center align-items-center">
                               <p className="text-muted mb-0 small">
                                 Total: $
-                                {(
-                                  cartItem.product.price * cartItem.quantity
-                                ).toFixed(2)}
+                                {cartItem.product.price * cartItem.quantity}
                               </p>
                             </div>
                           </div>
@@ -134,7 +132,7 @@ const Order = () => {
                       </p>
                       <p className="text-muted mb-0">
                         <span className="fw-bold me-4">Total</span> $
-                        {order.total.toFixed(2)}
+                        {order.total}
                       </p>
                     </div>
 

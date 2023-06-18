@@ -54,13 +54,15 @@ const ChartComponent = () => {
     <div className="chart-container">
       <h1 className="chart-heading text-danger">Chart Component</h1>
       {/* {loading ? ( */}
-      <p>Loading categories...</p>
+      <p>Select categories...</p>
       {/* // ) : ( */}
       <select
         className="category-select"
         value={selectedCategory}
         onChange={handleCategoryChange}
       >
+        <option value="">Select a category</option>{" "}
+        {/* Add the default empty option */}
         {categories.map((category) => (
           <option key={category.id} value={category.id}>
             {category.name}
@@ -72,7 +74,6 @@ const ChartComponent = () => {
         <Chart
           chartType="PieChart"
           data={[["Product Name", "Count"], ...data]}
-          // data={data}
           options={options}
           width={"100%"}
           height={"400px"}

@@ -14,13 +14,7 @@ const UserHeader = (props) => {
 
   return (
     <>
-      <Nav.Link
-        className="nav-text d-flex mt-3 justify-content-end"
-        style={{ color: "white" }}
-      >
-        <img src={cart} className="login-img" alt="sfvs" />
-        <p style={{ color: "white" }}> Notification</p>
-      </Nav.Link>
+      
       <Nav.Link
         href="/cart"
         className="nav-text d-flex mt-3 justify-content-end"

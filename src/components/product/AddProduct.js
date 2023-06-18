@@ -168,6 +168,7 @@ const AddProduct = (props) => {
                   name="price"
                   onChange={handleInput}
                   value={product.price}
+                  min={1}
                 />
                 {error.price && (
                   <span className="text-danger">{error.price}</span>
