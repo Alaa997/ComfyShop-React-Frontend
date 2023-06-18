@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import "./App.css";
 import Header from "./components/header/Header";
@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useEffect, useState } from "react";
 import TokenManager from "./APIs/TokenManager";
 import { searchProductsByName } from "./APIs/ProductAPI";
+import { getRole } from "./APIs/AuthAPI";
 
 function App() {
   const [stompClient, setStompClient] = useState();
@@ -103,6 +104,12 @@ function App() {
   }, []);
   console.log(stompClient);
 
+  const isAuthorized = (allowedRoles) => {
+    const role = getRole();
+    return role && allowedRoles.includes(role);
+  };
+
+
   return (
     <div className="font">
       <Header
@@ -129,25 +136,48 @@ function App() {
             path="/home/all/product/category/:categoryId/:categoryName"
             element={<HomePage searchResults={searchResults} />}
           />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/cart" element={<MyCart />} />
-          <Route path="/order" element={<Order />} />
-          <Route path="/statistics" element={<ChartComponent />} />
-          <Route path="/addcategory" element={<AddCategory />} />
-          {/* <Route path="/addcategory" element={<UpdateProduct />} /> */}
+          <Route
+            path="/addcategory"
+            element={
+              isAuthorized(["ADMIN"]) ? <AddCategory /> : <Navigate to="/" />
+            }
+          />
           <Route
             path="/addproduct"
-            element={<AddProduct sendMessage={sendMessage} />}
+            element={
+              isAuthorized(["ADMIN"]) ? (
+                <AddProduct sendMessage={sendMessage} />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
           />
           <Route
             path="/update-product/:productId"
-            element={<UpdateProduct />}
+            element={
+              isAuthorized(["ADMIN"]) ? <UpdateProduct /> : <Navigate to="/" />
+            }
           />
-          {/* <Route path="/chat" element={<Chat />} /> */}
+          <Route
+            path="/cart"
+            element={
+              isAuthorized(["CUSTOMER"]) ? <MyCart /> : <Navigate to="/" />
+            }
+          />
+          <Route
+            path="/order"
+            element={
+              isAuthorized(["CUSTOMER"]) ? <Order /> : <Navigate to="/" />
+            }
+          />
+          <Route
+            path="/statistics"
+            element={
+              isAuthorized(["ADMIN"]) ? <ChartComponent /> : <Navigate to="/" />
+            }
+          />
         </Routes>
       </BrowserRouter>
-      {/* <Footer /> */}
     </div>
   );
 }
